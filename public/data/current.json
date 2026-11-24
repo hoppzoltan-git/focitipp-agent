@@ -790,5 +790,38 @@
     }
    ]
   }
- ]
+ ],
+ "slip": {
+  "title": "Az agent ajánlott szelvénye – szerda",
+  "note": "Csak olyan tétel került bele, ahol a becslésünk legalább akkora, mint amennyit a Bet365-odds áraz. Az oddsok a Bet365 éjféli árai; fogadás előtt ellenőrizd őket az irodánál.",
+  "legs": [
+   {
+    "matchId": "sbh-bar",
+    "match": "Sabah – Barcelona",
+    "kickoff": "2026-11-25T18:45:00+01:00",
+    "pick": "Barcelona győzelem",
+    "odds": 1.09,
+    "prob": 0.9,
+    "why": "Óriási minőségkülönbség; Raphinha 6 gól az utolsó 4 BL-meccsén, a Sabah védelmének alapembere eltiltott."
+   },
+   {
+    "matchId": "spo-mun",
+    "match": "Sporting CP – Manchester United",
+    "kickoff": "2026-11-25T21:00:00+01:00",
+    "pick": "Sporting nem kap ki (1X)",
+    "odds": 1.44,
+    "prob": 0.7,
+    "why": "A United megtizedelt (Cunha eltiltva, Šeško, Rashford, Baleba sérült), az új edző első BL-meccse egy 0-4 után."
+   },
+   {
+    "matchId": "psg-rom",
+    "match": "PSG – AS Roma",
+    "kickoff": "2026-11-25T21:00:00+01:00",
+    "pick": "3,5 lap alatt",
+    "odds": 1.57,
+    "prob": 0.67,
+    "why": "Glenn Nyberg a BL-ben átlagosan 2,65 sárgát ad meccsenként, jóval a 4,1-es BL-átlag alatt."
+   }
+  ]
+ }
 }

@@ -86,7 +86,20 @@ button:disabled{opacity:.5;cursor:default}
 .note{font-size:13px;color:var(--mute);margin-top:18px}
 .empty{padding:30px;text-align:center;color:var(--mute)}
 .slip{grid-column:1/-1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,2.5vw,24px)}
-.linkbtn{display:inline-flex;align-items:center;text-decoration:none}
+.linkbtn{display:inline-flex;align-items:center;text-decoration:none;background:var(--acc);color:#fff;border-radius:10px;padding:10px 16px;font:600 16px Barlow,sans-serif;min-height:44px}
+.rec{grid-column:1/-1;background:var(--pitch);color:var(--chalk);border-radius:16px;padding:clamp(16px,2.5vw,24px)}
+.rec h2{font-size:26px;margin:0 0 4px}.rec .ph{color:#cfe0d5}
+.recGrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;margin-top:12px;align-items:start}
+.legs{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.leg{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;background:var(--pitch2);border-radius:12px;padding:10px 12px}
+.leg .lm{font-size:13px;color:#cfe0d5}.leg .lp{font-weight:600;font-size:16px}.leg .lo{grid-row:1/3;grid-column:2;align-self:center;font:700 24px "Barlow Condensed",sans-serif}
+.leg .lw{grid-column:1/-1;font-size:13px;color:#d9e8de}
+.recBox{background:var(--card);color:var(--ink);border-radius:14px;padding:14px 16px}
+.recBox label{margin-top:10px}.recBox .ph{color:var(--mute)}
+.tot,.pay{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.tot b{font-size:36px;color:var(--acc)}.pay{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.pay b{font-size:30px}
+.kv{display:flex;justify-content:space-between;gap:8px;font-size:15px;margin-top:6px}
+@media(max-width:900px){.recGrid{grid-template-columns:minmax(0,1fr)}}
 .slip h2{font-size:24px;margin:0 0 4px}
 .slipIn{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;align-items:start}
 .drop{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;border:2px dashed var(--line);border-radius:12px;padding:22px 14px;margin-top:12px;cursor:pointer;color:var(--ink);font-size:15px;min-height:88px}
@@ -119,6 +132,21 @@ footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13p
   </div>
 </header>
 <main>
+  <section class="rec" id="rec" hidden aria-label="Ajánlott szelvény">
+    <div class="recHead"><div><h2 id="recTitle">Az agent ajánlott szelvénye</h2><p class="ph" id="recNote"></p></div></div>
+    <div class="recGrid">
+      <ol class="legs" id="legs"></ol>
+      <div class="recBox">
+        <div class="tot"><span>Eredő odds</span><b class="num" id="totOdds">–</b></div>
+        <label for="stake">Tét (Ft)</label>
+        <input id="stake" type="number" min="0" step="100" inputmode="numeric" placeholder="pl. 2000">
+        <div class="pay"><span>Lehetséges nyeremény</span><b class="num" id="payout">–</b></div>
+        <div class="kv"><span>Becsült bejövési esély</span><b id="hit">–</b></div>
+        <div class="kv"><span>Az iroda szerint</span><b id="implied">–</b></div>
+        <p class="ph" id="evLine"></p>
+      </div>
+    </div>
+  </section>
   <section class="slip" id="slip" aria-label="Szelvényelemző">
     <div class="slipIn">
       <div>
@@ -197,30 +225,33 @@ function detail(i){
    ${(m.players||[]).length?`<div class="sec"><h4>Kulcsjátékosok</h4><div class="pl">${['h','a'].map(sd=>{const ps=m.players.filter(x=>x.team===sd);if(!ps.length)return '';return `<div class="plcol"><div class="plt">${esc(sd==='h'?m.home.name:m.away.name)}</div>${ps.map(x=>`<div class="pr"><span class="st ${stCls(x.status)}">${esc(x.status)}</span><div><b>${esc(x.name)}</b><small>${esc(x.note||'')}</small></div></div>`).join('')}</div>`}).join('')}</div></div>`:''}
    ${statBlock(m.id)}
    ${(m.rumors||[]).length?`<div class="sec rum"><h4>Pletykák <span class="chip c1">nem megerősített</span></h4><ul class="news">${m.rumors.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`:''}
-   <div class="sec"><h4>Érték-kalkulátor</h4>
-     <div class="calc">
-       <div><label for="cOut">Kimenet</label><select id="cOut"><option value="h">1 – ${esc(m.home.name)}</option><option value="d">X – döntetlen</option><option value="a">2 – ${esc(m.away.name)}</option></select></div>
-       <div><label for="cOdds">Iroda oddsa</label><input id="cOdds" type="number" step="0.01" min="1.01" inputmode="decimal" placeholder="pl. 1.85"></div>
-       <div><label for="cBank">Bankroll (Ft)</label><input id="cBank" type="number" step="1000" min="0" inputmode="numeric" value="${esc(ls.get('bank')||'20000')}"></div>
-     </div>
-     <div class="out" id="cRes">Írd be az iroda oddsát, és megmutatom, van-e matematikai előny.</div>
-   </div>
    <div class="sec"><h4>Kérdezd az agentet</h4><p class="ph">Meccsenkénti kérdést a <a href="https://claude.ai/artifact/WmMx7aBewiskCWbJFWkMuy" target="_blank" rel="noopener">Claude-os változatban</a> tehetsz fel.</p></div>
    ${(m.sources||[]).length?`<div class="sec src"><h4>Források</h4>${m.sources.filter(s=>/^https:\/\//.test(s.url)).map(s=>`<div><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title||s.url)}</a></div>`).join('')}</div>`:''}
    <p class="note">Az agent csak a fenti adatokból dolgozik; a kezdőcsapatok kb. egy órával a kezdés előtt derülnek ki.</p>`;
-  const calc=()=>{const o=+$('cOdds').value,pk=$('cOut').value,pr=(+p[pk]||0)/100,bank=+$('cBank').value||0;ls.set('bank',$('cBank').value);
-    if(!(o>1)){$('cRes').textContent='Írd be az iroda oddsát, és megmutatom, van-e matematikai előny.';return}
-    const ev=pr*o-1,k=(pr*o-1)/(o-1),q=Math.max(0,k/4);const r=$('cRes');
-    r.innerHTML=ev>0?`<span class="pos"><b>+${(ev*100).toFixed(1)}%</b> várható érték.</span> Negyed-Kelly szerinti tét: <b>${Math.round(bank*q).toLocaleString('hu-HU')} Ft</b> (${(q*100).toFixed(1)}%).`
-      :`<span class="neg"><b>${(ev*100).toFixed(1)}%</b> várható érték.</span> Ez az odds alacsonyabb a fair oddsnál (${fair(p[pk]*1)}), hosszú távon veszteséges.`};
-  ['cOdds','cOut','cBank'].forEach(id=>$(id).addEventListener('input',calc));
 }
 
 $('list').addEventListener('click',e=>{const b=e.target.closest('.row');if(!b)return;detail(+b.dataset.i);if(matchMedia('(max-width:900px)').matches)$('panel').scrollIntoView({behavior:'smooth',block:'start'})});
 
+function renderSlip(){
+  const s=data&&data.slip;const sec=$('rec');
+  if(!s||!Array.isArray(s.legs)||!s.legs.length){sec.hidden=true;return}
+  sec.hidden=false;
+  $('recTitle').textContent=s.title||'Az agent ajánlott szelvénye';
+  $('recNote').textContent=s.note||'';
+  $('legs').innerHTML=s.legs.map(l=>`<li class="leg"><span class="lm">${esc(l.match||'')}${l.kickoff?' · '+esc(fmtTime(l.kickoff)):''}</span><span class="lo">${esc(Number(l.odds).toFixed(2))}</span><span class="lp">${esc(l.pick||'')}</span>${l.why?`<span class="lw">${esc(l.why)}</span>`:''}</li>`).join('');
+  const tot=s.legs.reduce((a,l)=>a*(+l.odds||1),1);
+  const pr=s.legs.every(l=>+l.prob>0)?s.legs.reduce((a,l)=>a*(+l.prob),1):null;
+  $('totOdds').textContent=tot.toFixed(2);
+  $('hit').textContent=pr?Math.round(pr*100)+'%':'–';
+  $('implied').textContent=Math.round(100/tot)+'%';
+  $('evLine').textContent=pr?(pr*tot>1?`Becsült várható érték: +${((pr*tot-1)*100).toFixed(0)}% – a becslésünk szerint a szelvény az odds fölött van.`:`Becsült várható érték: ${((pr*tot-1)*100).toFixed(0)}% – ez inkább szórakozás, mint érték.`):'';
+  const st=$('stake');if(!st.value)st.value=ls.get('stake')||'';
+  const upd=()=>{const v=+st.value||0;ls.set('stake',st.value);$('payout').textContent=v>0?Math.round(v*tot).toLocaleString('hu-HU')+' Ft':'–'};
+  st.oninput=upd;upd();
+}
 async function getJson(u){const r=await fetch(u+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)return null;return r.json()}
 async function load(){
-  try{const [c,s]=await Promise.all([getJson('/data/current.json'),getJson('/data/stats.json')]);if(s)stats=s;data=c;render()}
+  try{const [c,s]=await Promise.all([getJson('/data/current.json'),getJson('/data/stats.json')]);if(s)stats=s;data=c;render();renderSlip()}
   catch(e){$('list').innerHTML='<div class="empty">Nem sikerült betölteni az adatokat.</div>'}
 }
 load();
