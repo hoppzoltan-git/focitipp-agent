@@ -86,6 +86,7 @@ button:disabled{opacity:.5;cursor:default}
 .note{font-size:13px;color:var(--mute);margin-top:18px}
 .empty{padding:30px;text-align:center;color:var(--mute)}
 .slip{grid-column:1/-1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,2.5vw,24px)}
+.linkbtn{display:inline-flex;align-items:center;text-decoration:none}
 .slip h2{font-size:24px;margin:0 0 4px}
 .slipIn{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;align-items:start}
 .drop{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;border:2px dashed var(--line);border-radius:12px;padding:22px 14px;margin-top:12px;cursor:pointer;color:var(--ink);font-size:15px;min-height:88px}
@@ -108,7 +109,7 @@ footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13p
     <div>
       <h1 id="title">Focitipp Agent</h1>
       <p id="sub">Statisztika, hírek és forma alapján elemzi a következő meccseket, és megmondja, hol látszik érték.</p>
-      <div class="rf"><button class="go" id="refreshBtn">Frissítés most</button><span id="refreshSt"></span></div>
+      <div class="rf"><span>Minden nap 16:00 körül frissül automatikusan.</span></div>
     </div>
     <div class="kpis">
       <div class="kpi"><b id="k1">–</b><span>meccs</span></div>
@@ -118,16 +119,13 @@ footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13p
   </div>
 </header>
 <main>
-  <section class="slip" id="slip" hidden aria-label="Szelvény elemzése">
+  <section class="slip" id="slip" aria-label="Szelvényelemző">
     <div class="slipIn">
       <div>
-        <h2>Szelvényelemző</h2>
-        <p class="ph">Tölts fel egy képet vagy képernyőképet a fogadásodról. Az agent kiolvassa a tippeket és az oddsokat, majd összeveti őket a saját becsléseivel.</p>
-        <label class="drop" id="drop" for="file"><input id="file" type="file" accept="image/*" multiple><span id="dropTxt"><b>Kép kiválasztása</b> vagy húzd ide</span></label>
-        <div class="thumbs" id="thumbs"></div>
-        <div class="ask"><button class="go" id="slipBtn" disabled>Szelvény elemzése</button><button class="ghost" id="slipStop" hidden>Leállítás</button><button class="ghost" id="slipClear" hidden>Törlés</button></div>
+        <h2>Szelvényelemző és kérdések</h2>
+        <p class="ph">A szelvényfeltöltés és a meccsenkénti kérdés a Claude-os változatban érhető el, a Claude-előfizetésed keretéből.</p>
       </div>
-      <div class="ans slipOut" id="slipOut">Itt jelenik meg az elemzés: minden tétel értéke, a teljes szelvény esélye és a javaslat.</div>
+      <div><a class="go linkbtn" href="https://claude.ai/artifact/WmMx7aBewiskCWbJFWkMuy" target="_blank" rel="noopener">Megnyitás a Claude-ban</a></div>
     </div>
   </section>
   <section class="board" aria-label="Meccsek">
@@ -162,7 +160,7 @@ function stCls(s){s=String(s||'').toLowerCase();return /kies|eltilt|sérült/.te
 function fair(p){return p>0?(100/p).toFixed(2):'–'}
 
 function render(){
-  if(!data||!Array.isArray(data.matches)||!data.matches.length){$('list').innerHTML='<div class="empty">Még nincs betöltött forduló. Nyomd meg fent a „Frissítés most” gombot (2–4 perc).</div>';return}
+  if(!data||!Array.isArray(data.matches)||!data.matches.length){$('list').innerHTML='<div class="empty">Még nincs betöltött forduló. Az első adatok hamarosan megérkeznek, utána minden nap 16:00 körül frissül.</div>';return}
   $('title').textContent=data.title||'Focitipp Agent';
   if(data.subtitle)$('sub').textContent=data.subtitle;
   const ms=data.matches;
@@ -207,11 +205,7 @@ function detail(i){
      </div>
      <div class="out" id="cRes">Írd be az iroda oddsát, és megmutatom, van-e matematikai előny.</div>
    </div>
-   <div class="sec" id="askSec"><h4>Kérdezd az agentet erről a meccsről</h4>
-     <div class="ask"><textarea id="q" placeholder="pl. Mit gondolsz a 2,5 gól felettről? Melyik játékos szerezhet gólt?"></textarea></div>
-     <div class="ask"><button class="go" id="askBtn">Elemzés kérése</button><button class="ghost" id="stopBtn" hidden>Leállítás</button></div>
-     <div class="ans" id="ans" hidden></div>
-   </div>
+   <div class="sec"><h4>Kérdezd az agentet</h4><p class="ph">Meccsenkénti kérdést a <a href="https://claude.ai/artifact/WmMx7aBewiskCWbJFWkMuy" target="_blank" rel="noopener">Claude-os változatban</a> tehetsz fel.</p></div>
    ${(m.sources||[]).length?`<div class="sec src"><h4>Források</h4>${m.sources.filter(s=>/^https:\/\//.test(s.url)).map(s=>`<div><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title||s.url)}</a></div>`).join('')}</div>`:''}
    <p class="note">Az agent csak a fenti adatokból dolgozik; a kezdőcsapatok kb. egy órával a kezdés előtt derülnek ki.</p>`;
   const calc=()=>{const o=+$('cOdds').value,pk=$('cOut').value,pr=(+p[pk]||0)/100,bank=+$('cBank').value||0;ls.set('bank',$('cBank').value);
@@ -220,59 +214,15 @@ function detail(i){
     r.innerHTML=ev>0?`<span class="pos"><b>+${(ev*100).toFixed(1)}%</b> várható érték.</span> Negyed-Kelly szerinti tét: <b>${Math.round(bank*q).toLocaleString('hu-HU')} Ft</b> (${(q*100).toFixed(1)}%).`
       :`<span class="neg"><b>${(ev*100).toFixed(1)}%</b> várható érték.</span> Ez az odds alacsonyabb a fair oddsnál (${fair(p[pk]*1)}), hosszú távon veszteséges.`};
   ['cOdds','cOut','cBank'].forEach(id=>$(id).addEventListener('input',calc));
-  if(!sample)$('askSec').hidden=true;
-  $('askBtn').onclick=()=>ask(m);$('stopBtn').onclick=()=>ctl&&ctl.abort();
 }
-
-async function post(url,body,signal){const r=await fetch(url,{method:'POST',body,signal,headers:body instanceof FormData?{}:{'content-type':'application/json'}});let j={};try{j=await r.json()}catch(e){}if(!r.ok)throw new Error(j.error||('Hiba ('+r.status+')'));return j}
-
-async function ask(m){
-  const q=$('q').value.trim();
-  const ans=$('ans');ans.hidden=false;ans.textContent='Gondolkodik…';
-  $('askBtn').disabled=true;$('stopBtn').hidden=false;ctl=new AbortController();
-  try{const j=await post('/api/ask',JSON.stringify({matchId:m.id,question:q}),ctl.signal);ans.textContent=j.text||'Nincs válasz.'}
-  catch(e){ans.textContent=e.name==='AbortError'?'Leállítva.':e.message}
-  finally{$('askBtn').disabled=false;$('stopBtn').hidden=true}
-}
-
-let files=[],sctl=null,maxImg=4;
-function setFiles(list){
-  files=[...list].filter(f=>/^image\//.test(f.type)).slice(0,maxImg);
-  $('thumbs').innerHTML='';
-  files.forEach(f=>{const img=document.createElement('img');img.alt='Feltöltött szelvény';img.src=URL.createObjectURL(f);$('thumbs').append(img)});
-  $('dropTxt').innerHTML=files.length?`<b>${files.length} kép kiválasztva</b> · másik választása`:'<b>Kép kiválasztása</b> vagy húzd ide';
-  $('slipBtn').disabled=!files.length;$('slipClear').hidden=!files.length;
-}
-function shrink(f){return new Promise((res,rej)=>{const img=new Image();img.onload=()=>{const k=Math.min(1,1600/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(b=>b?res(b):rej(new Error('A képet nem sikerült feldolgozni.')),'image/jpeg',0.85)};img.onerror=()=>rej(new Error('A képet nem sikerült megnyitni.'));img.src=URL.createObjectURL(f)})}
-$('file').addEventListener('change',e=>setFiles(e.target.files));
-const dr=$('drop');
-['dragenter','dragover'].forEach(t=>dr.addEventListener(t,e=>{e.preventDefault();dr.classList.add('on')}));
-['dragleave','drop'].forEach(t=>dr.addEventListener(t,e=>{e.preventDefault();dr.classList.remove('on')}));
-dr.addEventListener('drop',e=>{if(e.dataTransfer?.files)setFiles(e.dataTransfer.files)});
-$('slipClear').onclick=()=>{$('file').value='';setFiles([]);$('slipOut').textContent='Itt jelenik meg az elemzés: minden tétel értéke, a teljes szelvény esélye és a javaslat.'};
-$('slipStop').onclick=()=>sctl&&sctl.abort();
-$('slipBtn').onclick=async()=>{
-  if(!files.length)return;
-  const out=$('slipOut');out.textContent='Gondolkodik… (képpel ez fél-egy percig is eltarthat)';
-  $('slipBtn').disabled=true;$('slipStop').hidden=false;sctl=new AbortController();
-  try{const fd=new FormData();for(const f of files)fd.append('images',await shrink(f),'szelveny.jpg');const j=await post('/api/slip',fd,sctl.signal);out.textContent=j.text||'Nincs válasz.'}
-  catch(e){out.textContent=e.name==='AbortError'?'Leállítva.':e.message}
-  finally{$('slipBtn').disabled=!files.length;$('slipStop').hidden=true}
-};
 
 $('list').addEventListener('click',e=>{const b=e.target.closest('.row');if(!b)return;detail(+b.dataset.i);if(matchMedia('(max-width:900px)').matches)$('panel').scrollIntoView({behavior:'smooth',block:'start'})});
 
+async function getJson(u){const r=await fetch(u+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)return null;return r.json()}
 async function load(){
-  try{const r=await fetch('/api/data',{cache:'no-store'});const j=await r.json();if(j.stats)stats=j.stats;if(j.current){data=j.current}render()}
-  catch(e){if(!data)$('list').innerHTML='<div class="empty">Nem sikerült betölteni az adatokat.</div>'}
+  try{const [c,s]=await Promise.all([getJson('/data/current.json'),getJson('/data/stats.json')]);if(s)stats=s;data=c;render()}
+  catch(e){$('list').innerHTML='<div class="empty">Nem sikerült betölteni az adatokat.</div>'}
 }
-$('refreshBtn').onclick=async()=>{
-  const b=$('refreshBtn'),st=$('refreshSt');b.disabled=true;st.textContent='Kutatás folyamatban… ez 2–4 percig tart, ne zárd be az oldalt.';
-  try{const j=await post('/api/refresh','{}');st.textContent=`Kész: ${j.matches} meccs frissült.`;await load()}
-  catch(e){st.textContent=e.message}
-  finally{b.disabled=false}
-};
-$('slip').hidden=false;
 load();
 }
 </script>
