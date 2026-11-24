@@ -27,7 +27,7 @@ h1,h2,h3,.num{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:700;l
 .kpi{background:var(--pitch2);border-radius:12px;padding:12px 14px}
 .kpi b{display:block;font:700 30px/1 "Barlow Condensed",sans-serif}
 .kpi span{font-size:13px;color:#cfe0d5}
-main{max-width:1240px;margin:0 auto;padding:24px max(5vw,16px) 48px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:24px;align-items:start}
+main{max-width:980px;margin:0 auto;padding:24px max(5vw,16px) 48px;display:grid;grid-template-columns:minmax(0,1fr);gap:24px;align-items:start}
 .board h2,.panel h2{font-size:24px;margin:0 0 12px}
 .row{display:block;width:100%;text-align:left;background:var(--card);color:inherit;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:0 0 10px;cursor:pointer;font:inherit;min-height:44px}
 .row:hover{border-color:var(--h)}.row[aria-current=true]{border-color:var(--acc);box-shadow:0 0 0 2px color-mix(in srgb,var(--acc) 35%,transparent)}
@@ -41,8 +41,12 @@ main{max-width:1240px;margin:0 auto;padding:24px max(5vw,16px) 48px;display:grid
 .pick{display:flex;justify-content:space-between;gap:8px;margin-top:8px;font-size:14px;align-items:center}
 .chip{display:inline-block;padding:2px 9px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap}
 .c3{background:var(--acc);color:#fff}.c2{background:color-mix(in srgb,var(--acc) 22%,transparent);color:var(--ink)}.c1,.c0{background:var(--line);color:var(--ink)}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,2.5vw,26px)}
-@media(min-width:901px){.panel{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}}
+.panel{background:var(--card);border:1px solid var(--acc);border-top:0;border-radius:0 0 16px 16px;padding:clamp(16px,2.5vw,26px);margin:-12px 0 12px;position:relative}
+.row[aria-expanded=true]{border-radius:14px 14px 0 0;border-color:var(--acc);border-bottom-color:var(--line);box-shadow:none}
+.closeBtn{position:absolute;top:10px;right:10px;background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:10px;min-height:40px;padding:6px 12px;font:600 14px Barlow,sans-serif;cursor:pointer}
+.closeBtn:hover{border-color:var(--acc)}
+.chev{display:inline-block;margin-left:8px;transition:transform .2s;color:var(--mute)}.row[aria-expanded=true] .chev{transform:rotate(180deg)}
+.panel .ph:first-child{padding-right:110px}
 .ph{font-size:13px;color:var(--mute)}
 .vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center;margin:6px 0 16px}
 .vs h3{margin:0;font-size:clamp(24px,3vw,32px);line-height:1.05}
@@ -53,6 +57,7 @@ main{max-width:1240px;margin:0 auto;padding:24px max(5vw,16px) 48px;display:grid
 .probs b{display:block;font:700 26px/1.1 "Barlow Condensed",sans-serif}
 .probs span{font-size:13px;color:var(--mute);white-space:nowrap}
 .tip{background:var(--pitch);color:var(--chalk);border-radius:14px;padding:14px 16px;margin:16px 0}
+.tip .chip{color:#fff}.tip .c2,.tip .c1,.tip .c0{background:rgba(255,255,255,.18)}
 .tip b{font:700 24px/1.15 "Barlow Condensed",sans-serif;display:block}
 .tip p{margin:6px 0 0;color:#d9e8de}
 .sec{margin-top:18px}.sec h4{margin:0 0 6px;font-size:15px}
@@ -140,11 +145,8 @@ footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13p
 <main>
   <section class="board" aria-label="Meccsek">
     <h2>Meccsek és tippek</h2>
-    <p class="ph" style="margin:-6px 0 12px">Rendezés: a legerősebb tippek vannak felül.</p>
+    <p class="ph" style="margin:-6px 0 12px">Rendezés: a legerősebb tippek vannak felül. Kattints egy meccsre a részletekért, újabb kattintással bezárul.</p>
     <div id="list"><div class="empty" id="status">Adatok betöltése…</div></div>
-  </section>
-  <section class="panel" id="panel" aria-live="polite">
-    <div class="empty">Válassz egy meccset a bal oldali listából.</div>
   </section>
   <section class="rec" id="rec" hidden aria-label="Ajánlott szelvények">
     <div id="recList"></div>
@@ -190,21 +192,28 @@ function render(){
   $('k2').textContent=ms.filter(m=>m.tip&&m.tip.conf===3).length;
   const u=new Date(data.updatedAt);$('k3').textContent=isNaN(u)?'–':u.toLocaleDateString('hu-HU',{month:'short',day:'numeric'});
   const order=ms.map((m,i)=>i).sort((x,y)=>{const a=ms[x],b=ms[y];const ca=a.tip?a.tip.conf||0:0,cb=b.tip?b.tip.conf||0:0;if(cb!==ca)return cb-ca;const pa=Math.max(+a.prob?.h||0,+a.prob?.a||0),pb=Math.max(+b.prob?.h||0,+b.prob?.a||0);if(pb!==pa)return pb-pa;return String(a.kickoff).localeCompare(String(b.kickoff))});
-  if(cur==null)cur=order[0];
-  $('list').innerHTML=order.map(i=>{const m=ms[i];const p=m.prob||{h:0,d:0,a:0};const c=m.tip?m.tip.conf:0;return `<button class="row" data-i="${i}" aria-current="${cur===i}">
+  $('list').innerHTML=order.map(i=>{const m=ms[i];const p=m.prob||{h:0,d:0,a:0};const c=m.tip?m.tip.conf:0;return `<button class="row" data-i="${i}" aria-expanded="${cur===i}" aria-controls="det">
     <div class="rh"><span>${esc(m.comp)}</span><span>${esc(fmtTime(m.kickoff))}</span></div>
     <div class="teams"><span>${esc(m.home.name)}</span><span>${esc(m.away.name)}</span></div>
     <div class="bar" aria-label="Esélyek: hazai ${p.h}%, döntetlen ${p.d}%, vendég ${p.a}%"><i class="bh" style="width:${+p.h||0}%"></i><i class="bd" style="width:${+p.d||0}%"></i><i class="ba" style="width:${+p.a||0}%"></i></div>
-    <div class="pick"><span>${esc(m.tip?m.tip.pick:'')}</span><span class="chip c${c}">${CONF[c]||''}</span></div>${(()=>{const s=sOf(m.id);if(!s)return '';const x=[['Szöglet',s.corners],['Lap',s.cards]].filter(([,o])=>o&&o.conf>=2);return x.length?`<div class="sline">${x.map(([n,o])=>`${n}: ${esc(o.tip)}`).join(' · ')}</div>`:''})()}</button>`}).join('');
-  if(cur!=null)detail(cur);
+    <div class="pick"><span>${esc(m.tip?m.tip.pick:'')}</span><span><span class="chip c${c}">${CONF[c]||''}</span><span class="chev" aria-hidden="true">▾</span></span></div>${(()=>{const s=sOf(m.id);if(!s)return '';const x=[['Szöglet',s.corners],['Lap',s.cards]].filter(([,o])=>o&&o.conf>=2);return x.length?`<div class="sline">${x.map(([n,o])=>`${n}: ${esc(o.tip)}`).join(' · ')}</div>`:''})()}</button>`}).join('');
+  if(cur!=null)detail(cur,true);
 }
 
-function detail(i){
-  cur=i;const m=data.matches[i];if(!m)return;
-  document.querySelectorAll('.row').forEach(r=>r.setAttribute('aria-current',String(+r.dataset.i===i)));
+function closeDetail(){const old=$('det');if(old)old.remove();document.querySelectorAll('.row').forEach(r=>r.setAttribute('aria-expanded','false'));cur=null}
+function detail(i,keep){
+  const m=data.matches[i];if(!m)return;
+  if(!keep&&cur===i&&$('det')){closeDetail();return}
+  const old=$('det');if(old)old.remove();
+  cur=i;
+  const row=document.querySelector(`.row[data-i="${i}"]`);if(!row)return;
+  document.querySelectorAll('.row').forEach(r=>r.setAttribute('aria-expanded',String(r===row)));
+  const pn=document.createElement('section');pn.className='panel';pn.id='det';pn.setAttribute('aria-live','polite');
+  row.after(pn);
   const p=m.prob||{h:0,d:0,a:0};const t=m.tip||{};
   const side=(s)=>`<small>${s.pos?esc(s.pos)+'. hely · ':''}${s.pts!=null?esc(s.pts)+' pont':''}${s.rec?' · '+esc(s.rec)+' (GY-D-V)':''}</small>`;
-  $('panel').innerHTML=`
+  pn.innerHTML=`
+   <button class="closeBtn" id="closeDet">Bezárás ✕</button>
    <div class="ph">${esc(m.comp)} · ${esc(fmtTime(m.kickoff))}${m.venue?' · '+esc(m.venue):''}</div>
    <div class="vs"><h3>${esc(m.home.name)}${side(m.home)}</h3><span class="x">VS</span><h3 class="r">${esc(m.away.name)}${side(m.away)}</h3></div>
    <div class="bar"><i class="bh" style="width:${+p.h||0}%"></i><i class="bd" style="width:${+p.d||0}%"></i><i class="ba" style="width:${+p.a||0}%"></i></div>
@@ -221,10 +230,14 @@ function detail(i){
    ${(m.rumors||[]).length?`<div class="sec rum"><h4>Pletykák <span class="chip c1">nem megerősített</span></h4><ul class="news">${m.rumors.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`:''}
    <div class="sec"><h4>Kérdezd az agentet</h4><p class="ph">Meccsenkénti kérdést a <a href="https://claude.ai/artifact/WmMx7aBewiskCWbJFWkMuy" target="_blank" rel="noopener">Claude-os változatban</a> tehetsz fel.</p></div>
    ${(m.sources||[]).length?`<div class="sec src"><h4>Források</h4>${m.sources.filter(s=>/^https:\/\//.test(s.url)).map(s=>`<div><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title||s.url)}</a></div>`).join('')}</div>`:''}
-   <p class="note">Az agent csak a fenti adatokból dolgozik; a kezdőcsapatok kb. egy órával a kezdés előtt derülnek ki.</p>`;
+   <p class="note">Az agent csak a fenti adatokból dolgozik; a kezdőcsapatok kb. egy órával a kezdés előtt derülnek ki.</p>
+   <button class="ghost" id="closeDet2" style="margin-top:8px">Bezárás ▴</button>`;
+  const cl=()=>{closeDetail();row.focus();row.scrollIntoView({block:'nearest'})};
+  $('closeDet').onclick=cl;$('closeDet2').onclick=cl;
+  if(!keep)row.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-$('list').addEventListener('click',e=>{const b=e.target.closest('.row');if(!b)return;detail(+b.dataset.i);if(matchMedia('(max-width:900px)').matches)$('panel').scrollIntoView({behavior:'smooth',block:'start'})});
+$('list').addEventListener('click',e=>{const b=e.target.closest('.row');if(!b)return;detail(+b.dataset.i)});
 
 function renderSlip(){
   const sec=$('rec');
