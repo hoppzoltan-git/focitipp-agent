@@ -111,6 +111,9 @@ button:disabled{opacity:.5;cursor:default}
 .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.thumbs img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 .slipOut{margin-top:0;min-height:160px;color:var(--ink)}
 @media(max-width:900px){.slipIn{grid-template-columns:minmax(0,1fr)}}
+.jump{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border-radius:10px;background:var(--acc);color:#fff;font-weight:600;text-decoration:none}
+.jump:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.rec{scroll-margin-top:16px}
 .rf{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}.rf span{font-size:14px;color:#cfe0d5}
 footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13px;color:var(--mute)}
 @media(max-width:900px){.top .in,main{grid-template-columns:minmax(0,1fr)}}
@@ -125,7 +128,7 @@ footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13p
     <div>
       <h1 id="title">Focitipp Agent</h1>
       <p id="sub">Statisztika, hírek és forma alapján elemzi a következő meccseket, és megmondja, hol látszik érték.</p>
-      <div class="rf"><span>Minden nap 16:00 körül frissül automatikusan.</span></div>
+      <div class="rf"><a class="jump" href="#rec" id="jumpRec" hidden>Ajánlott szelvények ↓</a><span>Minden nap 16:00 körül frissül automatikusan.</span></div>
     </div>
     <div class="kpis">
       <div class="kpi"><b id="k1">–</b><span>meccs</span></div>
@@ -135,6 +138,14 @@ footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13p
   </div>
 </header>
 <main>
+  <section class="board" aria-label="Meccsek">
+    <h2>Meccsek és tippek</h2>
+    <p class="ph" style="margin:-6px 0 12px">Rendezés: a legerősebb tippek vannak felül.</p>
+    <div id="list"><div class="empty" id="status">Adatok betöltése…</div></div>
+  </section>
+  <section class="panel" id="panel" aria-live="polite">
+    <div class="empty">Válassz egy meccset a bal oldali listából.</div>
+  </section>
   <section class="rec" id="rec" hidden aria-label="Ajánlott szelvények">
     <div id="recList"></div>
   </section>
@@ -146,14 +157,6 @@ footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13p
       </div>
       <div><a class="go linkbtn" href="https://claude.ai/artifact/WmMx7aBewiskCWbJFWkMuy" target="_blank" rel="noopener">Megnyitás a Claude-ban</a></div>
     </div>
-  </section>
-  <section class="board" aria-label="Meccsek">
-    <h2>Meccsek és tippek</h2>
-    <p class="ph" style="margin:-6px 0 12px">Rendezés: a legerősebb tippek vannak felül.</p>
-    <div id="list"><div class="empty" id="status">Adatok betöltése…</div></div>
-  </section>
-  <section class="panel" id="panel" aria-live="polite">
-    <div class="empty">Válassz egy meccset a bal oldali listából.</div>
   </section>
 </main>
 <footer>
@@ -227,8 +230,8 @@ function renderSlip(){
   const sec=$('rec');
   let slips=(data&&Array.isArray(data.slips))?data.slips:(data&&data.slip?[data.slip]:[]);
   slips=slips.filter(s=>s&&Array.isArray(s.legs));
-  if(!slips.length){sec.hidden=true;return}
-  sec.hidden=false;
+  if(!slips.length){sec.hidden=true;$('jumpRec').hidden=true;return}
+  sec.hidden=false;$('jumpRec').hidden=false;
   $('recList').innerHTML=slips.map((s,k)=>{
     const cnt={};s.legs.forEach(l=>{cnt[l.matchId]=(cnt[l.matchId]||0)+1});
     const hasLegs=s.legs.length>0;
