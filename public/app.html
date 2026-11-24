@@ -88,8 +88,11 @@ button:disabled{opacity:.5;cursor:default}
 .slip{grid-column:1/-1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,2.5vw,24px)}
 .linkbtn{display:inline-flex;align-items:center;text-decoration:none;background:var(--acc);color:#fff;border-radius:10px;padding:10px 16px;font:600 16px Barlow,sans-serif;min-height:44px}
 .rec{grid-column:1/-1;background:var(--pitch);color:var(--chalk);border-radius:16px;padding:clamp(16px,2.5vw,24px)}
-.rec h2{font-size:26px;margin:0 0 4px}.rec .ph{color:#cfe0d5}
+.rec h2{font-size:26px;margin:0 0 4px;line-height:1.15}.rec .ph{color:#cfe0d5}
 .recGrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;margin-top:12px;align-items:start}
+.slipBlk+.slipBlk{margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.18)}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--acc);color:#fff;margin-left:6px;vertical-align:1px}
+.tag.alt{background:rgba(255,255,255,.18)}
 .legs{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .leg{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;background:var(--pitch2);border-radius:12px;padding:10px 12px}
 .leg .lm{font-size:13px;color:#cfe0d5}.leg .lp{font-weight:600;font-size:16px}.leg .lo{grid-row:1/3;grid-column:2;align-self:center;font:700 24px "Barlow Condensed",sans-serif}
@@ -132,20 +135,8 @@ footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13p
   </div>
 </header>
 <main>
-  <section class="rec" id="rec" hidden aria-label="Ajánlott szelvény">
-    <div class="recHead"><div><h2 id="recTitle">Az agent ajánlott szelvénye</h2><p class="ph" id="recNote"></p></div></div>
-    <div class="recGrid">
-      <ol class="legs" id="legs"></ol>
-      <div class="recBox">
-        <div class="tot"><span>Eredő odds</span><b class="num" id="totOdds">–</b></div>
-        <label for="stake">Tét (Ft)</label>
-        <input id="stake" type="number" min="0" step="100" inputmode="numeric" placeholder="pl. 2000">
-        <div class="pay"><span>Lehetséges nyeremény</span><b class="num" id="payout">–</b></div>
-        <div class="kv"><span>Becsült bejövési esély</span><b id="hit">–</b></div>
-        <div class="kv"><span>Az iroda szerint</span><b id="implied">–</b></div>
-        <p class="ph" id="evLine"></p>
-      </div>
-    </div>
+  <section class="rec" id="rec" hidden aria-label="Ajánlott szelvények">
+    <div id="recList"></div>
   </section>
   <section class="slip" id="slip" aria-label="Szelvényelemző">
     <div class="slipIn">
@@ -233,21 +224,43 @@ function detail(i){
 $('list').addEventListener('click',e=>{const b=e.target.closest('.row');if(!b)return;detail(+b.dataset.i);if(matchMedia('(max-width:900px)').matches)$('panel').scrollIntoView({behavior:'smooth',block:'start'})});
 
 function renderSlip(){
-  const s=data&&data.slip;const sec=$('rec');
-  if(!s||!Array.isArray(s.legs)||!s.legs.length){sec.hidden=true;return}
+  const sec=$('rec');
+  let slips=(data&&Array.isArray(data.slips))?data.slips:(data&&data.slip?[data.slip]:[]);
+  slips=slips.filter(s=>s&&Array.isArray(s.legs));
+  if(!slips.length){sec.hidden=true;return}
   sec.hidden=false;
-  $('recTitle').textContent=s.title||'Az agent ajánlott szelvénye';
-  $('recNote').textContent=s.note||'';
-  $('legs').innerHTML=s.legs.map(l=>`<li class="leg"><span class="lm">${esc(l.match||'')}${l.kickoff?' · '+esc(fmtTime(l.kickoff)):''}</span><span class="lo">${esc(Number(l.odds).toFixed(2))}</span><span class="lp">${esc(l.pick||'')}</span>${l.why?`<span class="lw">${esc(l.why)}</span>`:''}</li>`).join('');
-  const tot=s.legs.reduce((a,l)=>a*(+l.odds||1),1);
-  const pr=s.legs.every(l=>+l.prob>0)?s.legs.reduce((a,l)=>a*(+l.prob),1):null;
-  $('totOdds').textContent=tot.toFixed(2);
-  $('hit').textContent=pr?Math.round(pr*100)+'%':'–';
-  $('implied').textContent=Math.round(100/tot)+'%';
-  $('evLine').textContent=pr?(pr*tot>1?`Becsült várható érték: +${((pr*tot-1)*100).toFixed(0)}% – a becslésünk szerint a szelvény az odds fölött van.`:`Becsült várható érték: ${((pr*tot-1)*100).toFixed(0)}% – ez inkább szórakozás, mint érték.`):'';
-  const st=$('stake');if(!st.value)st.value=ls.get('stake')||'';
-  const upd=()=>{const v=+st.value||0;ls.set('stake',st.value);$('payout').textContent=v>0?Math.round(v*tot).toLocaleString('hu-HU')+' Ft':'–'};
-  st.oninput=upd;upd();
+  $('recList').innerHTML=slips.map((s,k)=>{
+    const cnt={};s.legs.forEach(l=>{cnt[l.matchId]=(cnt[l.matchId]||0)+1});
+    const hasLegs=s.legs.length>0;
+    return `<div class="slipBlk">
+    <h2>${esc(s.title||'Az agent ajánlott szelvénye')}${s.badge?`<span class="tag${k?' alt':''}">${esc(s.badge)}</span>`:''}</h2>
+    <p class="ph">${esc(s.note||'')}</p>
+    ${hasLegs?`<div class="recGrid">
+      <ol class="legs">${s.legs.map(l=>`<li class="leg"><span class="lm">${esc(l.match||'')}${l.kickoff?' · '+esc(fmtTime(l.kickoff)):''}${cnt[l.matchId]>1?'<span class="tag alt">azonos meccs – bet builder</span>':''}</span><span class="lo">${esc(Number(l.odds).toFixed(2))}</span><span class="lp">${esc(l.pick||'')}</span>${l.why?`<span class="lw">${esc(l.why)}</span>`:''}</li>`).join('')}</ol>
+      <div class="recBox">
+        <div class="tot"><span>Eredő odds</span><b class="num" id="tot${k}">–</b></div>
+        <label for="stake${k}">Tét (Ft)</label>
+        <input id="stake${k}" data-k="${k}" class="stake" type="number" min="0" step="100" inputmode="numeric" placeholder="pl. 2000">
+        <div class="pay"><span>Lehetséges nyeremény</span><b class="num" id="pay${k}">–</b></div>
+        <div class="kv"><span>Becsült bejövési esély</span><b id="hit${k}">–</b></div>
+        <div class="kv"><span>Az iroda szerint</span><b id="imp${k}">–</b></div>
+        <p class="ph" id="ev${k}"></p>
+        ${Object.values(cnt).some(c=>c>1)?'<p class="ph">Az azonos meccsre szóló tételeket az irodák általában csak „bet builder” funkcióval fogadják el, ott az odds eltérhet a szorzattól.</p>':''}
+      </div>
+    </div>`:''}
+    </div>`}).join('');
+  slips.forEach((s,k)=>{
+    if(!s.legs.length)return;
+    const tot=s.legs.reduce((a,l)=>a*(+l.odds||1),1);
+    const pr=s.legs.every(l=>+l.prob>0)?s.legs.reduce((a,l)=>a*(+l.prob),1):null;
+    $('tot'+k).textContent=tot.toFixed(2);
+    $('hit'+k).textContent=pr?Math.round(pr*100)+'%':'–';
+    $('imp'+k).textContent=Math.round(100/tot)+'%';
+    $('ev'+k).textContent=pr?(pr*tot>1?`Becsült várható érték: +${((pr*tot-1)*100).toFixed(0)}%.`:`Becsült várható érték: ${((pr*tot-1)*100).toFixed(0)}%.`):'';
+    const st=$('stake'+k);st.value=ls.get('stake'+k)||'';
+    const upd=()=>{const v=+st.value||0;ls.set('stake'+k,st.value);$('pay'+k).textContent=v>0?Math.round(v*tot).toLocaleString('hu-HU')+' Ft':'–'};
+    st.oninput=upd;upd();
+  });
 }
 async function getJson(u){const r=await fetch(u+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)return null;return r.json()}
 async function load(){
