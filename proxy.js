@@ -30,5 +30,5 @@ export function proxy(req) {
 }
 
 export const config = {
-  matcher: ['/((?!api/cron|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!api/football-data|_next/static|_next/image|favicon.ico).*)'],
 };
