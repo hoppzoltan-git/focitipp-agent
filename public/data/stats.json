@@ -1,1 +1,51 @@
-{"updatedAt":null,"byId":{}}
+{
+  "updatedAt": "2026-11-25T00:25:00+01:00",
+  "note": "Játékvezetők és szöglet-/lapvonalak: API-Football (Bet365-oddsok). Szögletátlagok: statz.ai (nov. 4-i állapot). BL-átlag idén: 9,6 szöglet és 4,1 lap meccsenként.",
+  "byId": {
+    "sbh-bar": {
+      "referee": { "name": "Nick Walsh (skót)", "status": "megerősített", "note": "Az API-Football szerint ő vezeti. Bet365 lapvonal: 3,5 (felett 2,00, alatt 1,73)." },
+      "corners": { "exp": 8.5, "line": 9.5, "note": "A Sabah hazai BL-meccsein 11,0, a Barça idegenbeli meccsein 6,0 szöglet volt átlagosan. Bet365: 9,5 felett 1,83, alatt 1,83.", "tip": "9,5 szöglet alatt", "conf": 1 },
+      "cards": { "exp": 3.5, "line": 3.5, "note": "Egyoldalú meccs várható, ilyenkor ritkább a sok lap. Walsh lapstatisztikájáról nincs friss adat.", "tip": "Nincs tipp", "conf": 0 }
+    },
+    "sla-vil": {
+      "referee": { "name": "Rade Obrenović (szlovén)", "status": "megerősített", "note": "Az API-Football szerint ő vezeti. Bet365 lapvonal: 4,5 (felett 2,10, alatt 1,67)." },
+      "corners": { "exp": 11.5, "line": 9.5, "note": "A Slavia hazai meccsein 10,5, a Villarreal idegenbeli meccsein 12,5 szöglet volt átlagosan. Mindkét csapatnak győzni kell, nyílt meccs várható. Bet365: 9,5 felett 1,73.", "tip": "9,5 szöglet felett", "conf": 2 },
+      "cards": { "exp": 4.5, "line": 4.5, "note": "A tét magas, a Villarrealnál Mouriño egy sárgára van az eltiltástól. Obrenović lapstatisztikájáról nincs adat.", "tip": "Nincs tipp", "conf": 0 }
+    },
+    "atm-vik": {
+      "referee": { "name": "E. Lambrechts", "status": "megerősített", "note": "Az API-Football szerint ő vezeti. Bet365 lapvonal: 3,5 (felett 2,25, alatt 1,57)." },
+      "corners": { "exp": 9.3, "line": 10.5, "note": "A Viking meccsein a legtöbb szöglet születik a BL-ben (15,0), de idegenben csak 11,0; az Atlético hazai meccsein 7,5. Bet365: 10,5 felett 2,00, alatt 1,73.", "tip": "Nincs érték", "conf": 0 },
+      "cards": { "exp": 4, "line": 3.5, "note": "Az Atlético játéka hagyományosan kemény. A játékvezető stílusáról nincs adat.", "tip": "Nincs tipp", "conf": 0 }
+    },
+    "bru-lfc": {
+      "referee": { "name": "Alejandro Hernández Hernández (spanyol)", "status": "megerősített", "note": "Az API-Football szerint ő vezeti. Bet365 lapvonal: 3,5 (felett 1,80) és 4,5 (felett 2,20)." },
+      "corners": { "exp": 11.3, "line": 9.5, "note": "A Liverpool meccsenként 9,3 szögletet végez el, ez a BL-ben az egyik legtöbb; idegenbeli meccsein 15,0 szöglet volt átlagosan. A Brugge csak 3,5 szögletet végez el meccsenként. Bet365: 9,5 felett 1,73.", "tip": "Liverpool több szögletet végez el", "conf": 2 },
+      "cards": { "exp": 4, "line": 4.5, "note": "Kiegyenlített meccs, nincs egyértelmű jel.", "tip": "Nincs tipp", "conf": 0 }
+    },
+    "int-vfb": {
+      "referee": { "name": "François Letexier (francia)", "status": "megerősített", "note": "Az API-Football szerint ő vezeti. Bet365 lapvonal: 3,5 (felett 1,83, alatt 1,83)." },
+      "corners": { "exp": 9, "line": 9.5, "note": "Mindkét csapat 6,0 szögletet végez el meccsenként. Az Inter hazai meccsein 8,5, a Stuttgart idegenbeli meccsein 9,5 volt az átlag. Bet365: 9,5 felett 1,88, alatt 1,92.", "tip": "Nincs érték", "conf": 0 },
+      "cards": { "exp": 4, "line": 3.5, "note": "A piac 3,5 lapnál teljesen kiegyenlített (1,83–1,83), nincs egyértelmű jel.", "tip": "Nincs tipp", "conf": 0 }
+    },
+    "sha-fen": {
+      "referee": { "name": "Michael Oliver (angol)", "status": "megerősített", "note": "Az API-Football szerint ő vezeti; a meccs helyszíne a Stamford Bridge, London. Bet365 lapvonal: 4,5 (felett 2,10, alatt 1,67)." },
+      "corners": { "exp": 9.4, "line": 9.5, "note": "A Sahtar hazai meccsein 8,0 szöglet volt. A Fenerbahçe idegenbeli adata (16,0) egyetlen meccsen alapul, nem megbízható. Bet365: 9,5 felett 1,92.", "tip": "Nincs érték", "conf": 0 },
+      "cards": { "exp": 4.5, "line": 4.5, "note": "Mindkét csapatnak fontos a meccs, a Sahtarnál Marlon Gomes egy sárgára van az eltiltástól.", "tip": "Nincs tipp", "conf": 0 }
+    },
+    "lil-bmu": {
+      "referee": { "name": "Marco Guida (olasz)", "status": "megerősített", "note": "Az API-Football szerint ő vezeti. Bet365 lapvonal: 3,5 (felett 1,80, alatt 1,91)." },
+      "corners": { "exp": 11.5, "line": 9.5, "note": "A Bayern 7,0 szögletet végez el meccsenként, idegenbeli meccsein 15,0 szöglet volt átlagosan; a Lille csak 3,0-t. A megfogyatkozott Bayern-támadás kockázat. Bet365: 9,5 felett 1,83, alatt 1,83.", "tip": "Bayern több szögletet végez el", "conf": 2 },
+      "cards": { "exp": 3.5, "line": 3.5, "note": "Nincs egyértelmű jel.", "tip": "Nincs tipp", "conf": 0 }
+    },
+    "psg-rom": {
+      "referee": { "name": "Glenn Nyberg (svéd)", "status": "megerősített", "note": "20 BL-meccsen 2,65 sárga lap/meccs, egyenes piros 0,10/meccs, 11-es 0,30/meccs. Két PSG-meccsét vezette, mindkettő 1-1 lett. Bet365 lapvonal: 3,5 (alatt 1,57)." },
+      "corners": { "exp": 5.5, "line": 8.5, "note": "A PSG hazai meccsein 7,0, a Roma idegenbeli meccsein csak 4,0 szöglet volt átlagosan (kis minta). Bet365: 8,5 felett 1,67, alatt 2,10.", "tip": "8,5 szöglet alatt", "conf": 2 },
+      "cards": { "exp": 3, "line": 3.5, "note": "Nyberg kevés lapot oszt (2,65 sárga/meccs a BL-átlag 4,1 alatt). Bet365: 3,5 alatt 1,57.", "tip": "3,5 lap alatt", "conf": 2 }
+    },
+    "spo-mun": {
+      "referee": { "name": "Szymon Marciniak (lengyel)", "status": "megerősített", "note": "Az API-Football szerint ő vezeti. Bet365 lapvonal: 4,5 (felett 2,20, alatt 1,62)." },
+      "corners": { "exp": 6.5, "line": 9.5, "note": "A Sporting hazai meccsein 7,0, a United idegenbeli meccsein 6,0 szöglet volt átlagosan; a United meccsein születik a legkevesebb szöglet (6,3) a mai csapatok közül. Bet365: 9,5 alatt 1,83.", "tip": "9,5 szöglet alatt", "conf": 2 },
+      "cards": { "exp": 4, "line": 4.5, "note": "Marciniak lapstatisztikájáról nincs friss adat.", "tip": "Nincs tipp", "conf": 0 }
+    }
+  }
+}

@@ -1,1 +1,794 @@
-{"updatedAt":null,"title":"Focitipp Agent","subtitle":"","matches":[]}
+{
+ "updatedAt": "2026-11-25T00:25:00+01:00",
+ "title": "Bajnokok Ligája · 5. forduló, szerda",
+ "subtitle": "9 meccs november 25-én. Az agent a tabella, a modell-esélyek, a Bet365-oddsok, a hivatalos csapathírek, a kulcsjátékosok állapota, a játékvezetők és a pletykák alapján tippel.",
+ "matches": [
+  {
+   "id": "sbh-bar",
+   "comp": "Bajnokok Ligája",
+   "kickoff": "2026-11-25T18:45:00+01:00",
+   "venue": "Bakui Olimpiai Stadion, Baku",
+   "home": {
+    "name": "Sabah",
+    "pos": 30,
+    "pts": 3,
+    "rec": "1-0-3"
+   },
+   "away": {
+    "name": "Barcelona",
+    "pos": 8,
+    "pts": 9,
+    "rec": "3-0-1"
+   },
+   "prob": {
+    "h": 3.8,
+    "d": 6.5,
+    "a": 89.7
+   },
+   "probSource": "Sportradar győzelmi esélyek",
+   "market": "Bet365: 1 – 21,00 · X – 10,00 · 2 – 1,09; 2,5 gól felett 1,11",
+   "news": [
+    "Lamine Yamal bokája miatt nem utazott el Bakuba, óvatosságból pihen.",
+    "Rodri, Christensen és Espart is hiányzik a Barça keretéből.",
+    "A Sabah 4 meccsen 10 gólt kapott, és a védő McCarthy eltiltott.",
+    "A Sabah november 4-én 1-4-re kikapott a Viking otthonában."
+   ],
+   "players": [
+    {
+     "name": "Raphinha",
+     "team": "a",
+     "status": "játszik",
+     "note": "6 gól az utolsó 4 BL-meccsén, 23 BL-gólnál jár a Barçában"
+    },
+    {
+     "name": "Lamine Yamal",
+     "team": "a",
+     "status": "kiesik",
+     "note": "Bokapanasz, nem utazott el"
+    },
+    {
+     "name": "Rodri",
+     "team": "a",
+     "status": "kiesik",
+     "note": "Combhajlító-sérülés, december elején térhet vissza"
+    },
+    {
+     "name": "Pedri",
+     "team": "a",
+     "status": "játszik",
+     "note": "A várható kezdőben"
+    },
+    {
+     "name": "McCarthy",
+     "team": "h",
+     "status": "eltiltva",
+     "note": "A Sabah védelmének alapembere"
+    },
+    {
+     "name": "Khaibulaev",
+     "team": "h",
+     "status": "kérdéses",
+     "note": "Ütés"
+    }
+   ],
+   "rumors": [
+    "Várható Barça-támadósor: Adeyemi, Fermín López, Gordon, elöl Raphinha (nem hivatalos kezdő)."
+   ],
+   "tip": {
+    "pick": "Barcelona győzelem + 2,5 gól felett",
+    "conf": 3,
+    "reason": "Yamal és Rodri nélkül is óriási a minőségkülönbség, Raphinha pedig tűzben van. A Sabah védelme gyenge, és az eltiltott McCarthy tovább gyengíti. A sima Barça-győzelem oddsa (1,09) túl alacsony, ezért a gólszámmal kombinált változat a jobb."
+   },
+   "sources": [
+    {
+     "title": "UEFA: várható kezdők, 5. forduló",
+     "url": "https://www.uefa.com/uefachampionsleague/news/02ab-2223c67db015-c4f7874e074e-1000--champions-league-starting-and-predicted-line-ups-matchday-5-/"
+    },
+    {
+     "title": "World Soccer Talk: Yamal kihagyja a Sabah elleni meccset",
+     "url": "https://worldsoccertalk.com/news/lamine-yamal-injury-update-barcelona-reveals-return-date-after-sabah-uefa-champions-league-blow/"
+    },
+    {
+     "title": "Scores24: BL-előzetesek nov. 25.",
+     "url": "https://scores24.live/en/articles/weekly-predictions/champions-league-25-11-2026"
+    }
+   ]
+  },
+  {
+   "id": "sla-vil",
+   "comp": "Bajnokok Ligája",
+   "kickoff": "2026-11-25T18:45:00+01:00",
+   "venue": "Fortuna Arena, Prága",
+   "home": {
+    "name": "Slavia Praha",
+    "pos": 34,
+    "pts": 1,
+    "rec": "0-1-3"
+   },
+   "away": {
+    "name": "Villarreal",
+    "pos": 29,
+    "pts": 3,
+    "rec": "1-0-3"
+   },
+   "prob": {
+    "h": 30.7,
+    "d": 24.5,
+    "a": 44.8
+   },
+   "probSource": "Sportradar győzelmi esélyek",
+   "market": "Bet365: 1 – 3,00 · X – 3,90 · 2 – 2,15; mindkét csapat szerez gólt: igen 1,44",
+   "news": [
+    "A Villarreal 4 BL-meccsen 14 gólt kapott, köztük egy hazai 0-6-ot a PSG-től.",
+    "A Villarrealnál öt játékos hiányzik, köztük Gerard Moreno és Foyth.",
+    "A Slaviánál hat játékos dőlt ki, köztük Provod és Chaloupek.",
+    "Mindkét csapatnak szinte kötelező a győzelem."
+   ],
+   "players": [
+    {
+     "name": "Georges Mikautadze",
+     "team": "a",
+     "status": "játszik",
+     "note": "A Villarreal fő gólszerzője: 2 gól, 1 gólpassz a BL-ben"
+    },
+    {
+     "name": "Gerard Moreno",
+     "team": "a",
+     "status": "kiesik",
+     "note": "Izomsérülés"
+    },
+    {
+     "name": "Álvaro Mouriño",
+     "team": "a",
+     "status": "játszik",
+     "note": "Egy sárga lapra van az eltiltástól"
+    },
+    {
+     "name": "Chytil",
+     "team": "h",
+     "status": "játszik",
+     "note": "A Slavia várható középcsatára"
+    },
+    {
+     "name": "Provod",
+     "team": "h",
+     "status": "kiesik",
+     "note": "Térdsérülés"
+    }
+   ],
+   "rumors": [
+    "A Villarreal várhatóan Gulácsi Péterrel a kapuban kezd (nem hivatalos kezdő)."
+   ],
+   "tip": {
+    "pick": "Mindkét csapat szerez gólt – Igen",
+    "conf": 2,
+    "reason": "A Villarreal védelme rendkívül sebezhető, és a hiányzók miatt a mezőny is vékonyabb. Az 1X2 piacon nincs egyértelmű favorit, a BTTS stabilabb választás."
+   },
+   "sources": [
+    {
+     "title": "UEFA: várható kezdők, 5. forduló",
+     "url": "https://www.uefa.com/uefachampionsleague/news/02ab-2223c67db015-c4f7874e074e-1000--champions-league-starting-and-predicted-line-ups-matchday-5-/"
+    },
+    {
+     "title": "Squawka: Slavia Prague vs Villarreal",
+     "url": "https://www.squawka.com/us/?p=102819"
+    }
+   ]
+  },
+  {
+   "id": "atm-vik",
+   "comp": "Bajnokok Ligája",
+   "kickoff": "2026-11-25T21:00:00+01:00",
+   "venue": "Metropolitano, Madrid",
+   "home": {
+    "name": "Atlético Madrid",
+    "pos": 26,
+    "pts": 4,
+    "rec": "1-1-2"
+   },
+   "away": {
+    "name": "Viking",
+    "pos": 25,
+    "pts": 4,
+    "rec": "1-1-2"
+   },
+   "prob": {
+    "h": 87.7,
+    "d": 8.1,
+    "a": 4.2
+   },
+   "probSource": "Sportradar győzelmi esélyek",
+   "market": "Bet365: 1 – 1,10 · X – 9,50 · 2 – 21,00; mindkét csapat szerez gólt: igen 1,95",
+   "news": [
+    "Mindkét csapat 4 ponton áll, -1-es gólkülönbséggel.",
+    "Az Atléticonál Lookman, Marc Pubill és Romero hiányzik.",
+    "A Viking 3-3-at játszott a Bayernnel és 4-1-re verte a Sabah-t.",
+    "Az Atlético legutóbb hazai pályán 0-2-re kikapott a Bayerntől."
+   ],
+   "players": [
+    {
+     "name": "Julián Álvarez",
+     "team": "h",
+     "status": "játszik",
+     "note": "Sørlothszal alkot csatárpárt a várható kezdőben"
+    },
+    {
+     "name": "Alexander Sørloth",
+     "team": "h",
+     "status": "játszik",
+     "note": "Várható kezdő"
+    },
+    {
+     "name": "Ademola Lookman",
+     "team": "h",
+     "status": "kiesik",
+     "note": "Térdsérülés"
+    },
+    {
+     "name": "Botheim",
+     "team": "a",
+     "status": "játszik",
+     "note": "A Viking várható támadója"
+    },
+    {
+     "name": "D'Agostino",
+     "team": "a",
+     "status": "kiesik",
+     "note": "Lábsérülés"
+    }
+   ],
+   "rumors": [],
+   "tip": {
+    "pick": "Atlético győzelem",
+    "conf": 3,
+    "reason": "Otthon, nyomás alatt az Atlético nagy favorit, a modell közel 88%-ot ad, és a támadósora teljes. Az 1,10-es odds alacsony; ha magasabb kell: Atlético győzelem + mindkét csapat szerez gólt, mert a Viking eddig szinte mindenkinek rúgott gólt."
+   },
+   "sources": [
+    {
+     "title": "UEFA: várható kezdők, 5. forduló",
+     "url": "https://www.uefa.com/uefachampionsleague/news/02ab-2223c67db015-c4f7874e074e-1000--champions-league-starting-and-predicted-line-ups-matchday-5-/"
+    },
+    {
+     "title": "Squawka: Atletico Madrid vs Viking",
+     "url": "https://www.squawka.com/us/?p=102830"
+    }
+   ]
+  },
+  {
+   "id": "bru-lfc",
+   "comp": "Bajnokok Ligája",
+   "kickoff": "2026-11-25T21:00:00+01:00",
+   "venue": "Jan Breydel Stadion, Brugge",
+   "home": {
+    "name": "Club Brugge",
+    "pos": 11,
+    "pts": 9,
+    "rec": "3-0-1"
+   },
+   "away": {
+    "name": "Liverpool",
+    "pos": 10,
+    "pts": 9,
+    "rec": "3-0-1"
+   },
+   "prob": {
+    "h": 21.5,
+    "d": 19.8,
+    "a": 58.7
+   },
+   "probSource": "Sportradar győzelmi esélyek",
+   "market": "Bet365: 1 – 4,20 · X – 4,75 · 2 – 1,65; mindkét csapat szerez gólt: igen 1,33",
+   "news": [
+    "A két csapat mérlege azonos: 9 pont, 3 győzelem, 1 vereség.",
+    "A Liverpool vasárnap 4-0-ra verte a Manchester Unitedet, vasárnap pedig Evertonnál játszik.",
+    "A Liverpoolból Gakpo, Ekitiké, Bradley, Jaroš és Leoni hiányzik, Gravenberch kérdéses.",
+    "A Brugge-ből Ordóñez (lábközépcsont-törés) és Virgili hiányzik."
+   ],
+   "players": [
+    {
+     "name": "Alexander Isak",
+     "team": "a",
+     "status": "játszik",
+     "note": "A várható kezdő középcsatára"
+    },
+    {
+     "name": "Florian Wirtz",
+     "team": "a",
+     "status": "játszik",
+     "note": "Várható kezdő"
+    },
+    {
+     "name": "Cody Gakpo",
+     "team": "a",
+     "status": "kiesik",
+     "note": "Vádlisérülés, legkorábban az Everton ellen térhet vissza"
+    },
+    {
+     "name": "Ryan Gravenberch",
+     "team": "a",
+     "status": "kérdéses",
+     "note": "Sarkasérülés, a United ellen még nem játszott"
+    },
+    {
+     "name": "Nicolò Tresoldi",
+     "team": "h",
+     "status": "játszik",
+     "note": "A Brugge legveszélyesebb gólszerzője"
+    },
+    {
+     "name": "Hans Vanaken",
+     "team": "h",
+     "status": "játszik",
+     "note": "A középpálya kulcsembere"
+    }
+   ],
+   "rumors": [
+    "Több előzetes is rotációt vár a Liverpooltól a sűrű program miatt.",
+    "Várható Liverpool-támadósor: Barcola, Wirtz, Ngumoha, elöl Isak (nem hivatalos kezdő)."
+   ],
+   "tip": {
+    "pick": "Mindkét csapat szerez gólt – Igen",
+    "conf": 2,
+    "reason": "A Liverpool a jobb csapat, de Gakpo és Ekitiké hiánya, a lehetséges rotáció és a Brugge hazai gólerőssége miatt a győztesre fogadni kockázatos. Gólt mindkét oldalon valószínűnek látom, bár az 1,33-as odds már nem sok értéket hagy."
+   },
+   "sources": [
+    {
+     "title": "UEFA: várható kezdők, 5. forduló",
+     "url": "https://www.uefa.com/uefachampionsleague/news/02ab-2223c67db015-c4f7874e074e-1000--champions-league-starting-and-predicted-line-ups-matchday-5-/"
+    },
+    {
+     "title": "Sports Mole: Liverpool sérültlista",
+     "url": "https://www.sportsmole.co.uk/football/liverpool/champions-league/injuries-and-suspensions/gakpo-gravenberch-latest-liverpool-injury-suspension-list-vs-club-brugge_609620.html"
+    }
+   ]
+  },
+  {
+   "id": "int-vfb",
+   "comp": "Bajnokok Ligája",
+   "kickoff": "2026-11-25T21:00:00+01:00",
+   "venue": "San Siro, Milánó",
+   "home": {
+    "name": "Inter",
+    "pos": 17,
+    "pts": 6,
+    "rec": "2-0-2"
+   },
+   "away": {
+    "name": "Stuttgart",
+    "pos": 15,
+    "pts": 7,
+    "rec": "2-1-1"
+   },
+   "prob": {
+    "h": 68.2,
+    "d": 16.4,
+    "a": 15.4
+   },
+   "probSource": "Sportradar győzelmi esélyek",
+   "market": "Bet365: 1 – 1,40 · X – 5,50 · 2 – 6,25",
+   "news": [
+    "Az Inter két vereség után két győzelemmel javított a BL-ben.",
+    "Az Internél Hakan Çalhanoğlu és Bonny combsérülés miatt kiesik.",
+    "A Stuttgartnál három játékos kérdéses: Jaquez, Sauer és Stiller.",
+    "A Stuttgart a BL-ben 0-2-re kikapott Galatasarayon."
+   ],
+   "players": [
+    {
+     "name": "Lautaro Martínez",
+     "team": "h",
+     "status": "játszik",
+     "note": "Espositóval alkot csatárpárt"
+    },
+    {
+     "name": "Hakan Çalhanoğlu",
+     "team": "h",
+     "status": "kiesik",
+     "note": "Combsérülés, a középpálya karmestere hiányzik"
+    },
+    {
+     "name": "Piotr Zieliński",
+     "team": "h",
+     "status": "játszik",
+     "note": "Lábpanasz miatt kérdéses volt, de a várható kezdőben szerepel"
+    },
+    {
+     "name": "Ermedin Demirović",
+     "team": "a",
+     "status": "játszik",
+     "note": "A Stuttgart BL-gólkirálya"
+    },
+    {
+     "name": "Deniz Undav",
+     "team": "a",
+     "status": "játszik",
+     "note": "Várható kezdő"
+    },
+    {
+     "name": "Angelo Stiller",
+     "team": "a",
+     "status": "kérdéses",
+     "note": "Ágyékpanasz"
+    }
+   ],
+   "rumors": [],
+   "tip": {
+    "pick": "Inter győzelem",
+    "conf": 2,
+    "reason": "Az Inter otthon stabil és győzelmi kényszerben van, de Çalhanoğlu hiánya gyengíti a játékirányítást. A Stuttgart kérdéses középpályásai (Stiller) kiegyenlítik ezt. Szoros, kevés gólos meccs várható."
+   },
+   "sources": [
+    {
+     "title": "UEFA: várható kezdők, 5. forduló",
+     "url": "https://www.uefa.com/uefachampionsleague/news/02ab-2223c67db015-c4f7874e074e-1000--champions-league-starting-and-predicted-line-ups-matchday-5-/"
+    },
+    {
+     "title": "Squawka: Inter Milan vs Stuttgart",
+     "url": "https://www.squawka.com/us/?p=102822"
+    }
+   ]
+  },
+  {
+   "id": "sha-fen",
+   "comp": "Bajnokok Ligája",
+   "kickoff": "2026-11-25T21:00:00+01:00",
+   "venue": "Stamford Bridge, London",
+   "home": {
+    "name": "Sahtar Donyeck",
+    "pos": 24,
+    "pts": 4,
+    "rec": "1-1-2"
+   },
+   "away": {
+    "name": "Fenerbahçe",
+    "pos": 22,
+    "pts": 5,
+    "rec": "1-2-1"
+   },
+   "prob": {
+    "h": 33.9,
+    "d": 27,
+    "a": 39.1
+   },
+   "probSource": "Sportradar győzelmi esélyek",
+   "market": "Bet365: 1 – 2,90 · X – 3,50 · 2 – 2,35",
+   "news": [
+    "A Fenerbahçe 5 ponton áll, de -5 a gólkülönbsége.",
+    "A Sahtarnál Kauã Elias (lábtörés), Marlon Santos és Mendoza hiányzik.",
+    "A Fenerbahçénél Aké és Asensio hiányzik.",
+    "Mindkét csapat a továbbjutást érő 24. hely körül harcol."
+   ],
+   "players": [
+    {
+     "name": "Marlon Gomes",
+     "team": "h",
+     "status": "játszik",
+     "note": "Egy sárga lapra van az eltiltástól"
+    },
+    {
+     "name": "Kauã Elias",
+     "team": "h",
+     "status": "kiesik",
+     "note": "Lábszártörés"
+    },
+    {
+     "name": "Mason Greenwood",
+     "team": "a",
+     "status": "játszik",
+     "note": "Várható kezdő"
+    },
+    {
+     "name": "Vedat Muriqi",
+     "team": "a",
+     "status": "játszik",
+     "note": "Várható középcsatár"
+    },
+    {
+     "name": "Marco Asensio",
+     "team": "a",
+     "status": "kiesik",
+     "note": "Térdsérülés"
+    }
+   ],
+   "rumors": [],
+   "tip": {
+    "pick": "Kihagyás – nincs egyértelmű érték",
+    "conf": 0,
+    "reason": "Három nagyjából egyforma esélyű kimenet, és mindkét oldalon vannak fontos hiányzók, így a hírek sem billentik el a mérleget. A kihagyott meccs is a bankroll-kezelés része."
+   },
+   "sources": [
+    {
+     "title": "UEFA: várható kezdők, 5. forduló",
+     "url": "https://www.uefa.com/uefachampionsleague/news/02ab-2223c67db015-c4f7874e074e-1000--champions-league-starting-and-predicted-line-ups-matchday-5-/"
+    }
+   ]
+  },
+  {
+   "id": "lil-bmu",
+   "comp": "Bajnokok Ligája",
+   "kickoff": "2026-11-25T21:00:00+01:00",
+   "venue": "Stade Pierre-Mauroy, Lille",
+   "home": {
+    "name": "Lille",
+    "pos": 35,
+    "pts": 1,
+    "rec": "0-1-3"
+   },
+   "away": {
+    "name": "Bayern München",
+    "pos": 14,
+    "pts": 8,
+    "rec": "2-2-0"
+   },
+   "prob": {
+    "h": 19.3,
+    "d": 22.8,
+    "a": 57.9
+   },
+   "probSource": "Sportradar győzelmi esélyek",
+   "market": "Bet365: 1 – 5,00 · X – 4,00 · 2 – 1,65; dupla esély 1X – 2,20",
+   "news": [
+    "A Bayernből kiesik Kane (boka), Neuer, Davies, Gnabry és Saibari.",
+    "Luis Díaz és Olise kérdéses, így a Bayern támadósora erősen megtizedelt.",
+    "A Lille-ből Tiago Santos és Nianzou hiányzik; a csapat még nyeretlen a BL-ben.",
+    "Vincent Kompany október végén összeesett egy edzésen, az Atlético elleni meccsen az asszisztense irányított."
+   ],
+   "players": [
+    {
+     "name": "Harry Kane",
+     "team": "a",
+     "status": "kiesik",
+     "note": "Bokasérülés"
+    },
+    {
+     "name": "Manuel Neuer",
+     "team": "a",
+     "status": "kiesik",
+     "note": "Lábsérülés, Urbig véd"
+    },
+    {
+     "name": "Luis Díaz",
+     "team": "a",
+     "status": "kérdéses",
+     "note": "Combhajlító"
+    },
+    {
+     "name": "Michael Olise",
+     "team": "a",
+     "status": "kérdéses",
+     "note": "Lábpanasz"
+    },
+    {
+     "name": "Joshua Kimmich",
+     "team": "a",
+     "status": "játszik",
+     "note": "Várható kezdő"
+    },
+    {
+     "name": "Ueda",
+     "team": "h",
+     "status": "játszik",
+     "note": "A Lille várható középcsatára"
+    },
+    {
+     "name": "Haraldsson",
+     "team": "h",
+     "status": "játszik",
+     "note": "Várható kezdő"
+    }
+   ],
+   "rumors": [
+    "A várható Bayern-kezdőben fiatalok (Bischof, Karl, Binder) is helyet kaphatnak (nem hivatalos kezdő).",
+    "Nem tiszta, hogy Kompany már visszatért-e a kispadra."
+   ],
+   "tip": {
+    "pick": "Lille nem kap ki (1X) – csak kis téttel",
+    "conf": 1,
+    "reason": "A modell csak kb. 58%-ot ad a Bayernnek, és ez a sérüléshullám előtt készült. Kane, Neuer, Davies és Gnabry nélkül, kérdéses Díazzal és Olisével a Bayern-oldal túlbecsültnek tűnik. A Lille formája viszont gyenge, ezért csak óvatos tét a 2,20-as dupla esélyre."
+   },
+   "sources": [
+    {
+     "title": "UEFA: várható kezdők, 5. forduló",
+     "url": "https://www.uefa.com/uefachampionsleague/news/02ab-2223c67db015-c4f7874e074e-1000--champions-league-starting-and-predicted-line-ups-matchday-5-/"
+    },
+    {
+     "title": "World Soccer Talk: Kompany állapota",
+     "url": "https://worldsoccertalk.com/news/why-is-vincent-kompany-not-on-the-bench-for-bayern-munich-vs-atletico-madrid-today-in-the-2026-27-uefa-champions-league/"
+    }
+   ]
+  },
+  {
+   "id": "psg-rom",
+   "comp": "Bajnokok Ligája",
+   "kickoff": "2026-11-25T21:00:00+01:00",
+   "venue": "Parc des Princes, Párizs",
+   "home": {
+    "name": "PSG",
+    "pos": 2,
+    "pts": 12,
+    "rec": "4-0-0"
+   },
+   "away": {
+    "name": "AS Roma",
+    "pos": 23,
+    "pts": 4,
+    "rec": "1-1-2"
+   },
+   "prob": {
+    "h": 66.4,
+    "d": 17.8,
+    "a": 15.8
+   },
+   "probSource": "Sportradar győzelmi esélyek",
+   "market": "Bet365: 1 – 1,44 · X – 4,75 · 2 – 6,50; 2,5 gól felett 1,33",
+   "news": [
+    "A PSG hibátlan a BL-ben, legutóbb 6-0-ra nyert Villarrealban.",
+    "A PSG-ből Doué és Kvaratskhelia is térdsérülés miatt kiesik.",
+    "A Roma 5-1-re verte a Parmát, Malen négy gólt lőtt.",
+    "A Romából Pellegrini hiányzik, Balerdi és Rensch kérdéses."
+   ],
+   "players": [
+    {
+     "name": "Ousmane Dembélé",
+     "team": "h",
+     "status": "játszik",
+     "note": "A megfogyatkozott támadósor vezére"
+    },
+    {
+     "name": "Désiré Doué",
+     "team": "h",
+     "status": "kiesik",
+     "note": "Térdsérülés"
+    },
+    {
+     "name": "Khvicha Kvaratskhelia",
+     "team": "h",
+     "status": "kiesik",
+     "note": "Térdsérülés"
+    },
+    {
+     "name": "Vitinha",
+     "team": "h",
+     "status": "játszik",
+     "note": "Várható kezdő"
+    },
+    {
+     "name": "Donyell Malen",
+     "team": "a",
+     "status": "játszik",
+     "note": "Legutóbb 4 gól a Parma ellen, 8 Serie A-gól"
+    },
+    {
+     "name": "Matias Soulé",
+     "team": "a",
+     "status": "játszik",
+     "note": "Gólt lőtt Old Traffordon"
+    },
+    {
+     "name": "Lorenzo Pellegrini",
+     "team": "a",
+     "status": "kiesik",
+     "note": "Combhajlító"
+    }
+   ],
+   "rumors": [
+    "Várható PSG-támadósor: Akliouche, Dembélé, Mayulu (nem hivatalos kezdő)."
+   ],
+   "tip": {
+    "pick": "PSG győzelem",
+    "conf": 2,
+    "reason": "A PSG formája kiemelkedő és otthon játszik, de Doué és Kvaratskhelia hiánya érzékelhetően gyengíti a támadást, Malen pedig tűzben van. Az 1,44-es odds kb. 69%-ot áraz, ami a modell 66%-ához közel van, ezért ez csak közepes tipp."
+   },
+   "sources": [
+    {
+     "title": "UEFA: várható kezdők, 5. forduló",
+     "url": "https://www.uefa.com/uefachampionsleague/news/02ab-2223c67db015-c4f7874e074e-1000--champions-league-starting-and-predicted-line-ups-matchday-5-/"
+    },
+    {
+     "title": "Scores24: BL-előzetesek nov. 25.",
+     "url": "https://scores24.live/en/articles/weekly-predictions/champions-league-25-11-2026"
+    },
+    {
+     "title": "ParisFans: Nyberg vezeti a PSG–Romát",
+     "url": "https://en.parisfans.fr/psg-vs-as-roma-referee-appointed-draws-and-few-cards.html"
+    }
+   ]
+  },
+  {
+   "id": "spo-mun",
+   "comp": "Bajnokok Ligája",
+   "kickoff": "2026-11-25T21:00:00+01:00",
+   "venue": "Estádio José Alvalade, Lisszabon",
+   "home": {
+    "name": "Sporting CP",
+    "pos": 12,
+    "pts": 9,
+    "rec": "3-0-1"
+   },
+   "away": {
+    "name": "Manchester United",
+    "pos": 19,
+    "pts": 6,
+    "rec": "2-0-2"
+   },
+   "prob": {
+    "h": 37.6,
+    "d": 25.6,
+    "a": 36.8
+   },
+   "probSource": "Sportradar győzelmi esélyek",
+   "market": "Bet365: 1 – 2,55 · X – 3,60 · 2 – 2,60; dupla esély 1X – 1,44",
+   "news": [
+    "Mauricio Pochettino november 18-án vette át a Unitedet; ez az első BL-meccse a kispadon.",
+    "A United vasárnap 0-4-re kikapott Liverpoolban.",
+    "A Unitedből Matheus Cunha eltiltott, Baleba, Rashford, Ugarte és Šeško sérült, Shaw kérdéses.",
+    "A Sportingból Debast és Nuno Santos hiányzik."
+   ],
+   "players": [
+    {
+     "name": "Luis Javier Suárez",
+     "team": "h",
+     "status": "játszik",
+     "note": "4 gól 339 perc alatt, 7 kaput eltaláló lövés"
+    },
+    {
+     "name": "Geny Catamo",
+     "team": "h",
+     "status": "játszik",
+     "note": "Várható kezdő"
+    },
+    {
+     "name": "Bryan Mbeumo",
+     "team": "a",
+     "status": "játszik",
+     "note": "Tavaly a United közös gólkirálya volt 11 bajnoki góllal"
+    },
+    {
+     "name": "Bruno Fernandes",
+     "team": "a",
+     "status": "játszik",
+     "note": "Várható kezdő"
+    },
+    {
+     "name": "Matheus Cunha",
+     "team": "a",
+     "status": "eltiltva",
+     "note": "Nem játszhat"
+    },
+    {
+     "name": "Benjamin Šeško",
+     "team": "a",
+     "status": "kiesik",
+     "note": "Vádlisérülés"
+    },
+    {
+     "name": "Carlos Baleba",
+     "team": "a",
+     "status": "kiesik",
+     "note": "Combsérülés, december elején térhet vissza"
+    }
+   ],
+   "rumors": [
+    "Várhatóan Zirkzee kezd középcsatárként Šeško helyett (nem hivatalos kezdő)."
+   ],
+   "tip": {
+    "pick": "Sporting nem kap ki (1X)",
+    "conf": 2,
+    "reason": "A United nagyon megtizedelt (Cunha eltiltva, Šeško, Rashford és Baleba sérült), az új edzőnek három napja volt, és utána 0-4 jött Liverpoolban; ez a hazai pályával együtt a Sporting felé billenti. Az 1,44-es odds viszont már kb. 69%-ot áraz, ami közel van a becslésemhez, ezért csak közepes tipp."
+   },
+   "sources": [
+    {
+     "title": "UEFA: várható kezdők, 5. forduló",
+     "url": "https://www.uefa.com/uefachampionsleague/news/02ab-2223c67db015-c4f7874e074e-1000--champions-league-starting-and-predicted-line-ups-matchday-5-/"
+    },
+    {
+     "title": "Sports Mole: Man Utd sérültlista",
+     "url": "https://www.sportsmole.co.uk/football/man-utd/injury-news/injuries-and-suspensions/baleba-rashford-sesko-latest-man-united-injury-suspension-list-vs-sporting_609648.html"
+    },
+    {
+     "title": "Forza Football: Sporting v Man Utd",
+     "url": "https://forzafootball.com/gb/play/betting-tips/sporting-vs-manchester-united-champions-league-predictions-odds"
+    }
+   ]
+  }
+ ]
+}
