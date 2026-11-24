@@ -14,9 +14,13 @@ export function proxy(req) {
   const auth = req.headers.get('authorization') || '';
   if (auth.startsWith('Basic ')) {
     try {
-      const decoded = atob(auth.slice(6));
+      // UTF-8 dekódolás, hogy az ékezetes jelszavak is működjenek
+      const bin = atob(auth.slice(6));
+      const decoded = new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)));
       const given = decoded.slice(decoded.indexOf(':') + 1);
-      if (given === pass) return NextResponse.next();
+      if (given.trim() === pass.trim() || bin.slice(bin.indexOf(':') + 1).trim() === pass.trim()) {
+        return NextResponse.next();
+      }
     } catch {}
   }
   return new NextResponse('Jelszó szükséges.', {
