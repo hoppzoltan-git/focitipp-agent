@@ -6,7 +6,7 @@ Focimeccs-elemző oldal: statisztika, csapathírek, kulcsjátékosok formája, p
 - A kutatást minden nap kb. 16:00-kor (Europe/Budapest) egy Claude ütemezett feladat végzi, és az eredményt a `public/data/current.json` és `public/data/stats.json` fájlokba írja ebben a repóban.
 - Minden feltöltés után a Vercel automatikusan újratelepíti az oldalt, így megjelennek a friss tippek.
 - Nincs szükség Anthropic API-kreditre.
-- Pontos adatforrás: API-Football (api-sports.io). A `/api/football-data?key=<DATA_KEY>` végpont a mai és holnapi fontos meccsekhez lekéri a kijelölt játékvezetőt, a sérülteket/eltiltottakat, a modell-esélyeket, a formát és az oddsokat (3 órás gyorsítótárral, a napi 100 kéréses keret kímélésére). A napi Claude-feladat ezt használja.
+- Pontos adatforrás: API-Football (api-sports.io). A `/api/football-data?key=<DATA_KEY>` végpont a mai és holnapi fontos meccsekhez lekéri a kijelölt játékvezetőt, a sérülteket/eltiltottakat, a modell-esélyeket, a formát és az oddsokat (6 órás gyorsítótárral, a napi 100 kéréses keret kímélésére). Sorozatok: BL, EL, KL, Premier League, LaLiga. A kód a válaszokban kapott napi maradékot figyeli, és 5 kérést mindig tartalékban hagy. A napi Claude-feladat ezt használja.
 
 ## Felépítés
 - `public/app.html` – a felület (érték-kalkulátorral)

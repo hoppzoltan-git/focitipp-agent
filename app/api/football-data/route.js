@@ -5,7 +5,7 @@ export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
 const CACHE = 'cache/football-data.json';
-const TTL_MS = 3 * 60 * 60 * 1000; // 3 óra, hogy kíméljük a napi 100 kéréses keretet
+const TTL_MS = 6 * 60 * 60 * 1000; // 6 óra: egy napon belüli ismételt hívás ne fogyassza a 100 kéréses keretet
 
 // A napi Claude-feladat hívja: ?key=<DATA_KEY>[&fresh=1][&status=1]
 export async function GET(req) {
@@ -18,10 +18,12 @@ export async function GET(req) {
       const s = await af('/status');
       return Response.json({ account: s.response?.account?.firstname ? 'ok' : null, subscription: s.response?.subscription, requests: s.response?.requests });
     }
-    if (!url.searchParams.get('fresh')) {
+    const wantFresh = !!url.searchParams.get('fresh');
+    {
       try {
         const meta = await head(CACHE);
-        if (Date.now() - new Date(meta.uploadedAt).getTime() < TTL_MS) {
+        const age = Date.now() - new Date(meta.uploadedAt).getTime();
+        if (age < (wantFresh ? 60 * 60 * 1000 : TTL_MS)) {
           const r = await fetch(`${meta.url}?t=${Date.now()}`, { cache: 'no-store' });
           if (r.ok) return Response.json({ cached: true, ...(await r.json()) });
         }
