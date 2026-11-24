@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Focitipp Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a calm matchday analyst - numbers first, no hype, honest about uncertainty
+   IDEA: the stadium matchday programme crossed with a betting slip
+   PICTURE: the fixture board itself - each match a row with a 1/X/2 probability bar
+   COLOUR and TYPE: pitch green band, chalk white, one hot orange accent; Barlow Condensed scoreboard numerals + Barlow
+   LAYOUT: green band header with summary, fixture board left, analysis panel right (stacks under 900px) */
+:root{color-scheme:light dark;--bg:light-dark(#f5f6f1,#0b1712);--card:light-dark(#ffffff,#12221a);--ink:light-dark(#0d1f17,#e8efe9);--mute:light-dark(#5b6b62,#9db0a4);--line:light-dark(#dfe4dc,#21362b);--pitch:#0f4a33;--pitch2:#13583d;--chalk:#f3f7f2;--acc:#ff5a36;--h:light-dark(#0f4a33,#4fc28b);--d:light-dark(#a9b3ac,#5d7266);--a:light-dark(#2f5f9e,#79a6e6)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Barlow,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3,.num{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:700;letter-spacing:.005em}
+.band{padding:clamp(24px,4vw,52px) max(5vw,16px)}
+.top{background:var(--pitch);color:var(--chalk);position:relative;overflow:hidden}
+.top svg.lines{position:absolute;inset:0;width:100%;height:100%;opacity:.13;pointer-events:none}
+.top .in{position:relative;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:end}
+.top h1{font-size:clamp(34px,5vw,52px);line-height:1.05;margin:0 0 8px;text-wrap:balance}
+.top p{margin:0;color:#cfe0d5;max-width:60ch}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.kpi{background:var(--pitch2);border-radius:12px;padding:12px 14px}
+.kpi b{display:block;font:700 30px/1 "Barlow Condensed",sans-serif}
+.kpi span{font-size:13px;color:#cfe0d5}
+main{max-width:1240px;margin:0 auto;padding:24px max(5vw,16px) 48px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:24px;align-items:start}
+.board h2,.panel h2{font-size:24px;margin:0 0 12px}
+.row{display:block;width:100%;text-align:left;background:var(--card);color:inherit;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:0 0 10px;cursor:pointer;font:inherit;min-height:44px}
+.row:hover{border-color:var(--h)}.row[aria-current=true]{border-color:var(--acc);box-shadow:0 0 0 2px color-mix(in srgb,var(--acc) 35%,transparent)}
+.row:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.rh{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--mute)}
+.teams{display:flex;justify-content:space-between;gap:10px;font-weight:600;margin:4px 0 8px;font-size:17px}
+.teams span:last-child{text-align:right}
+.bar{display:flex;height:10px;border-radius:6px;overflow:hidden;background:var(--line)}
+.bar i{display:block;height:100%}
+.bar .bh{background:var(--h)}.bar .bd{background:var(--d)}.bar .ba{background:var(--a)}
+.pick{display:flex;justify-content:space-between;gap:8px;margin-top:8px;font-size:14px;align-items:center}
+.chip{display:inline-block;padding:2px 9px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap}
+.c3{background:var(--acc);color:#fff}.c2{background:color-mix(in srgb,var(--acc) 22%,transparent);color:var(--ink)}.c1,.c0{background:var(--line);color:var(--ink)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,2.5vw,26px)}
+@media(min-width:901px){.panel{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}}
+.ph{font-size:13px;color:var(--mute)}
+.vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center;margin:6px 0 16px}
+.vs h3{margin:0;font-size:clamp(24px,3vw,32px);line-height:1.05}
+.vs .r{text-align:right}.vs small{display:block;font:500 13px Barlow,sans-serif;color:var(--mute)}
+.vs .x{font:700 18px "Barlow Condensed",sans-serif;color:var(--mute)}
+.probs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 6px}
+.probs div{border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.probs b{display:block;font:700 26px/1.1 "Barlow Condensed",sans-serif}
+.probs span{font-size:13px;color:var(--mute);white-space:nowrap}
+.tip{background:var(--pitch);color:var(--chalk);border-radius:14px;padding:14px 16px;margin:16px 0}
+.tip b{font:700 24px/1.15 "Barlow Condensed",sans-serif;display:block}
+.tip p{margin:6px 0 0;color:#d9e8de}
+.sec{margin-top:18px}.sec h4{margin:0 0 6px;font-size:15px}
+ul.news{margin:0;padding-left:18px}ul.news li{margin:3px 0}
+.pl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.plt{font:700 16px "Barlow Condensed",sans-serif;margin-bottom:4px;color:var(--mute)}
+.pr{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--line)}
+.pr b{display:block;font-weight:600;font-size:15px}.pr small{display:block;color:var(--mute);font-size:13px;line-height:1.35}
+.st{flex:none;font-size:12px;font-weight:600;padding:2px 7px;border-radius:6px;white-space:nowrap;margin-top:2px}
+.st.ok{background:color-mix(in srgb,var(--h) 18%,transparent);color:var(--h)}.st.doubt{background:color-mix(in srgb,#e0a100 22%,transparent);color:light-dark(#7a5800,#f0c34a)}.st.out{background:color-mix(in srgb,var(--acc) 18%,transparent);color:var(--acc)}
+.ref{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px}.ref b{display:block;font-weight:600}.ref small{display:block;color:var(--mute);font-size:13px;line-height:1.4}
+.sgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sbox{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.sbt{font-size:13px;color:var(--mute)}.sbn{font:700 28px/1.1 "Barlow Condensed",sans-serif}.sbox small{color:var(--mute);font-size:13px}
+.sbox p{margin:6px 0;font-size:14px;line-height:1.4}.sbp{font-size:14px}
+.sline{margin-top:6px;font-size:13px;color:var(--mute)}
+@media(max-width:600px){.sgrid{grid-template-columns:minmax(0,1fr)}}
+.rum{border-left:3px dashed var(--d);padding-left:12px}
+@media(max-width:600px){.pl{grid-template-columns:minmax(0,1fr)}}
+.calc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+label{font-size:13px;color:var(--mute);display:block}
+input,select,textarea{font:inherit;font-size:16px;width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);min-height:44px}
+.out{margin-top:8px;font-size:15px}.out b{font-family:"Barlow Condensed",sans-serif;font-size:20px}
+.pos{color:var(--h)}.neg{color:var(--acc)}
+button.go{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:10px 16px;font:600 16px Barlow,sans-serif;min-height:44px;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font:inherit;min-height:44px;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+.ask{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.ask textarea{flex:1 1 260px;min-height:64px;resize:vertical}
+.ans{white-space:pre-wrap;margin-top:10px;padding:12px;border-radius:10px;background:var(--bg);border:1px solid var(--line);font-size:15px}
+.src a{color:var(--h);font-size:14px;word-break:break-word}
+.note{font-size:13px;color:var(--mute);margin-top:18px}
+.empty{padding:30px;text-align:center;color:var(--mute)}
+.slip{grid-column:1/-1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,2.5vw,24px)}
+.slip h2{font-size:24px;margin:0 0 4px}
+.slipIn{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;align-items:start}
+.drop{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;border:2px dashed var(--line);border-radius:12px;padding:22px 14px;margin-top:12px;cursor:pointer;color:var(--ink);font-size:15px;min-height:88px}
+.drop.on,.drop:hover{border-color:var(--acc)}.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.drop:focus-within{outline:3px solid var(--acc);outline-offset:2px}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.thumbs img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.slipOut{margin-top:0;min-height:160px;color:var(--ink)}
+@media(max-width:900px){.slipIn{grid-template-columns:minmax(0,1fr)}}
+.rf{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}.rf span{font-size:14px;color:#cfe0d5}
+footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13px;color:var(--mute)}
+@media(max-width:900px){.top .in,main{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.kpi b{font-size:24px}.calc{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+@media(prefers-reduced-motion:no-preference){.bar i{transition:width .5s ease}}
+</style>
+</head>
+<body>
+<header class="top band">
+  <svg class="lines" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#fff" stroke-width="3"><rect x="20" y="20" width="1160" height="360"/><line x1="600" y1="20" x2="600" y2="380"/><circle cx="600" cy="200" r="80"/><rect x="20" y="110" width="140" height="180"/><rect x="1040" y="110" width="140" height="180"/></g></svg>
+  <div class="in">
+    <div>
+      <h1 id="title">Focitipp Agent</h1>
+      <p id="sub">Statisztika, hírek és forma alapján elemzi a következő meccseket, és megmondja, hol látszik érték.</p>
+      <div class="rf"><button class="go" id="refreshBtn">Frissítés most</button><span id="refreshSt"></span></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b id="k1">–</b><span>meccs</span></div>
+      <div class="kpi"><b id="k2">–</b><span>erős tipp</span></div>
+      <div class="kpi"><b id="k3">–</b><span>frissítve</span></div>
+    </div>
+  </div>
+</header>
+<main>
+  <section class="slip" id="slip" hidden aria-label="Szelvény elemzése">
+    <div class="slipIn">
+      <div>
+        <h2>Szelvényelemző</h2>
+        <p class="ph">Tölts fel egy képet vagy képernyőképet a fogadásodról. Az agent kiolvassa a tippeket és az oddsokat, majd összeveti őket a saját becsléseivel.</p>
+        <label class="drop" id="drop" for="file"><input id="file" type="file" accept="image/*" multiple><span id="dropTxt"><b>Kép kiválasztása</b> vagy húzd ide</span></label>
+        <div class="thumbs" id="thumbs"></div>
+        <div class="ask"><button class="go" id="slipBtn" disabled>Szelvény elemzése</button><button class="ghost" id="slipStop" hidden>Leállítás</button><button class="ghost" id="slipClear" hidden>Törlés</button></div>
+      </div>
+      <div class="ans slipOut" id="slipOut">Itt jelenik meg az elemzés: minden tétel értéke, a teljes szelvény esélye és a javaslat.</div>
+    </div>
+  </section>
+  <section class="board" aria-label="Meccsek">
+    <h2>Meccsek és tippek</h2>
+    <p class="ph" style="margin:-6px 0 12px">Rendezés: a legerősebb tippek vannak felül.</p>
+    <div id="list"><div class="empty" id="status">Adatok betöltése…</div></div>
+  </section>
+  <section class="panel" id="panel" aria-live="polite">
+    <div class="empty">Válassz egy meccset a bal oldali listából.</div>
+  </section>
+</main>
+<footer>
+  <p>Az agent tippjei valószínűségi becslések, nem biztos nyeremények. Hosszú távon csak akkor érdemes fogadni, ha az iroda oddsa magasabb a „fair oddsnál”. Csak 18 év felett, és csak annyit tegyél fel, amennyi elvesztését megengedheted magadnak.</p>
+</footer>
+<script>
+{
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
+const CONF=['Kihagyás','Gyenge','Közepes','Erős'];
+let data=null,cur=null,sample=true,ctl=null;
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+function fmtTime(iso){const d=new Date(iso);if(isNaN(d))return '';return d.toLocaleString('hu-HU',{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Budapest'})}
+let stats=null;
+function sOf(id){return stats&&stats.byId&&stats.byId[id]||null}
+function statBlock(id){const s=sOf(id);if(!s)return '';const r=s.referee||{},co=s.corners||{},ca=s.cards||{};
+  const box=(t,o)=>`<div class="sbox"><div class="sbt">${t}</div><div class="sbn num">${o.exp!=null?esc(o.exp):'–'}</div><small>várható összesen${o.line?' · vonal '+esc(o.line):''}</small>${o.note?`<p>${esc(o.note)}</p>`:''}<div class="sbp"><span class="chip c${o.conf||0}">${CONF[o.conf||0]}</span> <b>${esc(o.tip||'Nincs tipp')}</b></div></div>`;
+  return `<div class="sec"><h4>Statisztikai piacok: szöglet és lapok</h4>
+   <div class="ref"><span class="st ${r.status==='megerősített'?'ok':r.name?'doubt':'out'}">${esc(r.status||'nincs adat')}</span><div><b>Játékvezető: ${esc(r.name||'még nincs kijelölve')}</b><small>${esc(r.note||'')}</small></div></div>
+   <div class="sgrid">${box('Szögletek',co)}${box('Lapok',ca)}</div></div>`}
+function stCls(s){s=String(s||'').toLowerCase();return /kies|eltilt|sérült/.test(s)?'out':/kérdéses|bizonytalan/.test(s)?'doubt':'ok'}
+function fair(p){return p>0?(100/p).toFixed(2):'–'}
+
+function render(){
+  if(!data||!Array.isArray(data.matches)||!data.matches.length){$('list').innerHTML='<div class="empty">Még nincs betöltött forduló. Nyomd meg fent a „Frissítés most” gombot (2–4 perc).</div>';return}
+  $('title').textContent=data.title||'Focitipp Agent';
+  if(data.subtitle)$('sub').textContent=data.subtitle;
+  const ms=data.matches;
+  $('k1').textContent=ms.length;
+  $('k2').textContent=ms.filter(m=>m.tip&&m.tip.conf===3).length;
+  const u=new Date(data.updatedAt);$('k3').textContent=isNaN(u)?'–':u.toLocaleDateString('hu-HU',{month:'short',day:'numeric'});
+  const order=ms.map((m,i)=>i).sort((x,y)=>{const a=ms[x],b=ms[y];const ca=a.tip?a.tip.conf||0:0,cb=b.tip?b.tip.conf||0:0;if(cb!==ca)return cb-ca;const pa=Math.max(+a.prob?.h||0,+a.prob?.a||0),pb=Math.max(+b.prob?.h||0,+b.prob?.a||0);if(pb!==pa)return pb-pa;return String(a.kickoff).localeCompare(String(b.kickoff))});
+  if(cur==null)cur=order[0];
+  $('list').innerHTML=order.map(i=>{const m=ms[i];const p=m.prob||{h:0,d:0,a:0};const c=m.tip?m.tip.conf:0;return `<button class="row" data-i="${i}" aria-current="${cur===i}">
+    <div class="rh"><span>${esc(m.comp)}</span><span>${esc(fmtTime(m.kickoff))}</span></div>
+    <div class="teams"><span>${esc(m.home.name)}</span><span>${esc(m.away.name)}</span></div>
+    <div class="bar" aria-label="Esélyek: hazai ${p.h}%, döntetlen ${p.d}%, vendég ${p.a}%"><i class="bh" style="width:${+p.h||0}%"></i><i class="bd" style="width:${+p.d||0}%"></i><i class="ba" style="width:${+p.a||0}%"></i></div>
+    <div class="pick"><span>${esc(m.tip?m.tip.pick:'')}</span><span class="chip c${c}">${CONF[c]||''}</span></div>${(()=>{const s=sOf(m.id);if(!s)return '';const x=[['Szöglet',s.corners],['Lap',s.cards]].filter(([,o])=>o&&o.conf>=2);return x.length?`<div class="sline">${x.map(([n,o])=>`${n}: ${esc(o.tip)}`).join(' · ')}</div>`:''})()}</button>`}).join('');
+  if(cur!=null)detail(cur);
+}
+
+function detail(i){
+  cur=i;const m=data.matches[i];if(!m)return;
+  document.querySelectorAll('.row').forEach(r=>r.setAttribute('aria-current',String(+r.dataset.i===i)));
+  const p=m.prob||{h:0,d:0,a:0};const t=m.tip||{};
+  const side=(s)=>`<small>${s.pos?esc(s.pos)+'. hely · ':''}${s.pts!=null?esc(s.pts)+' pont':''}${s.rec?' · '+esc(s.rec)+' (GY-D-V)':''}</small>`;
+  $('panel').innerHTML=`
+   <div class="ph">${esc(m.comp)} · ${esc(fmtTime(m.kickoff))}${m.venue?' · '+esc(m.venue):''}</div>
+   <div class="vs"><h3>${esc(m.home.name)}${side(m.home)}</h3><span class="x">VS</span><h3 class="r">${esc(m.away.name)}${side(m.away)}</h3></div>
+   <div class="bar"><i class="bh" style="width:${+p.h||0}%"></i><i class="bd" style="width:${+p.d||0}%"></i><i class="ba" style="width:${+p.a||0}%"></i></div>
+   <div class="probs">
+     <div><span>Hazai (1)</span><b class="num">${esc(p.h)}%</b><span>fair odds ${fair(p.h)}</span></div>
+     <div><span>Döntetlen (X)</span><b class="num">${esc(p.d)}%</b><span>fair odds ${fair(p.d)}</span></div>
+     <div><span>Vendég (2)</span><b class="num">${esc(p.a)}%</b><span>fair odds ${fair(p.a)}</span></div>
+   </div>
+   <div class="ph">Esélyek forrása: ${esc(m.probSource||'statisztikai modell')}${m.market?' · Piac: '+esc(m.market):''}</div>
+   <div class="tip"><span class="chip c${t.conf||0}">${CONF[t.conf||0]} bizalom</span><b>${esc(t.pick||'Nincs tipp')}</b><p>${esc(t.reason||'')}</p></div>
+   <div class="sec"><h4>Hírek és forma</h4><ul class="news">${(m.news||[]).map(n=>`<li>${esc(n)}</li>`).join('')||'<li>Nincs friss hír.</li>'}</ul></div>
+   ${(m.players||[]).length?`<div class="sec"><h4>Kulcsjátékosok</h4><div class="pl">${['h','a'].map(sd=>{const ps=m.players.filter(x=>x.team===sd);if(!ps.length)return '';return `<div class="plcol"><div class="plt">${esc(sd==='h'?m.home.name:m.away.name)}</div>${ps.map(x=>`<div class="pr"><span class="st ${stCls(x.status)}">${esc(x.status)}</span><div><b>${esc(x.name)}</b><small>${esc(x.note||'')}</small></div></div>`).join('')}</div>`}).join('')}</div></div>`:''}
+   ${statBlock(m.id)}
+   ${(m.rumors||[]).length?`<div class="sec rum"><h4>Pletykák <span class="chip c1">nem megerősített</span></h4><ul class="news">${m.rumors.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`:''}
+   <div class="sec"><h4>Érték-kalkulátor</h4>
+     <div class="calc">
+       <div><label for="cOut">Kimenet</label><select id="cOut"><option value="h">1 – ${esc(m.home.name)}</option><option value="d">X – döntetlen</option><option value="a">2 – ${esc(m.away.name)}</option></select></div>
+       <div><label for="cOdds">Iroda oddsa</label><input id="cOdds" type="number" step="0.01" min="1.01" inputmode="decimal" placeholder="pl. 1.85"></div>
+       <div><label for="cBank">Bankroll (Ft)</label><input id="cBank" type="number" step="1000" min="0" inputmode="numeric" value="${esc(ls.get('bank')||'20000')}"></div>
+     </div>
+     <div class="out" id="cRes">Írd be az iroda oddsát, és megmutatom, van-e matematikai előny.</div>
+   </div>
+   <div class="sec" id="askSec"><h4>Kérdezd az agentet erről a meccsről</h4>
+     <div class="ask"><textarea id="q" placeholder="pl. Mit gondolsz a 2,5 gól felettről? Melyik játékos szerezhet gólt?"></textarea></div>
+     <div class="ask"><button class="go" id="askBtn">Elemzés kérése</button><button class="ghost" id="stopBtn" hidden>Leállítás</button></div>
+     <div class="ans" id="ans" hidden></div>
+   </div>
+   ${(m.sources||[]).length?`<div class="sec src"><h4>Források</h4>${m.sources.filter(s=>/^https:\/\//.test(s.url)).map(s=>`<div><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title||s.url)}</a></div>`).join('')}</div>`:''}
+   <p class="note">Az agent csak a fenti adatokból dolgozik; a kezdőcsapatok kb. egy órával a kezdés előtt derülnek ki.</p>`;
+  const calc=()=>{const o=+$('cOdds').value,pk=$('cOut').value,pr=(+p[pk]||0)/100,bank=+$('cBank').value||0;ls.set('bank',$('cBank').value);
+    if(!(o>1)){$('cRes').textContent='Írd be az iroda oddsát, és megmutatom, van-e matematikai előny.';return}
+    const ev=pr*o-1,k=(pr*o-1)/(o-1),q=Math.max(0,k/4);const r=$('cRes');
+    r.innerHTML=ev>0?`<span class="pos"><b>+${(ev*100).toFixed(1)}%</b> várható érték.</span> Negyed-Kelly szerinti tét: <b>${Math.round(bank*q).toLocaleString('hu-HU')} Ft</b> (${(q*100).toFixed(1)}%).`
+      :`<span class="neg"><b>${(ev*100).toFixed(1)}%</b> várható érték.</span> Ez az odds alacsonyabb a fair oddsnál (${fair(p[pk]*1)}), hosszú távon veszteséges.`};
+  ['cOdds','cOut','cBank'].forEach(id=>$(id).addEventListener('input',calc));
+  if(!sample)$('askSec').hidden=true;
+  $('askBtn').onclick=()=>ask(m);$('stopBtn').onclick=()=>ctl&&ctl.abort();
+}
+
+async function post(url,body,signal){const r=await fetch(url,{method:'POST',body,signal,headers:body instanceof FormData?{}:{'content-type':'application/json'}});let j={};try{j=await r.json()}catch(e){}if(!r.ok)throw new Error(j.error||('Hiba ('+r.status+')'));return j}
+
+async function ask(m){
+  const q=$('q').value.trim();
+  const ans=$('ans');ans.hidden=false;ans.textContent='Gondolkodik…';
+  $('askBtn').disabled=true;$('stopBtn').hidden=false;ctl=new AbortController();
+  try{const j=await post('/api/ask',JSON.stringify({matchId:m.id,question:q}),ctl.signal);ans.textContent=j.text||'Nincs válasz.'}
+  catch(e){ans.textContent=e.name==='AbortError'?'Leállítva.':e.message}
+  finally{$('askBtn').disabled=false;$('stopBtn').hidden=true}
+}
+
+let files=[],sctl=null,maxImg=4;
+function setFiles(list){
+  files=[...list].filter(f=>/^image\//.test(f.type)).slice(0,maxImg);
+  $('thumbs').innerHTML='';
+  files.forEach(f=>{const img=document.createElement('img');img.alt='Feltöltött szelvény';img.src=URL.createObjectURL(f);$('thumbs').append(img)});
+  $('dropTxt').innerHTML=files.length?`<b>${files.length} kép kiválasztva</b> · másik választása`:'<b>Kép kiválasztása</b> vagy húzd ide';
+  $('slipBtn').disabled=!files.length;$('slipClear').hidden=!files.length;
+}
+function shrink(f){return new Promise((res,rej)=>{const img=new Image();img.onload=()=>{const k=Math.min(1,1600/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(b=>b?res(b):rej(new Error('A képet nem sikerült feldolgozni.')),'image/jpeg',0.85)};img.onerror=()=>rej(new Error('A képet nem sikerült megnyitni.'));img.src=URL.createObjectURL(f)})}
+$('file').addEventListener('change',e=>setFiles(e.target.files));
+const dr=$('drop');
+['dragenter','dragover'].forEach(t=>dr.addEventListener(t,e=>{e.preventDefault();dr.classList.add('on')}));
+['dragleave','drop'].forEach(t=>dr.addEventListener(t,e=>{e.preventDefault();dr.classList.remove('on')}));
+dr.addEventListener('drop',e=>{if(e.dataTransfer?.files)setFiles(e.dataTransfer.files)});
+$('slipClear').onclick=()=>{$('file').value='';setFiles([]);$('slipOut').textContent='Itt jelenik meg az elemzés: minden tétel értéke, a teljes szelvény esélye és a javaslat.'};
+$('slipStop').onclick=()=>sctl&&sctl.abort();
+$('slipBtn').onclick=async()=>{
+  if(!files.length)return;
+  const out=$('slipOut');out.textContent='Gondolkodik… (képpel ez fél-egy percig is eltarthat)';
+  $('slipBtn').disabled=true;$('slipStop').hidden=false;sctl=new AbortController();
+  try{const fd=new FormData();for(const f of files)fd.append('images',await shrink(f),'szelveny.jpg');const j=await post('/api/slip',fd,sctl.signal);out.textContent=j.text||'Nincs válasz.'}
+  catch(e){out.textContent=e.name==='AbortError'?'Leállítva.':e.message}
+  finally{$('slipBtn').disabled=!files.length;$('slipStop').hidden=true}
+};
+
+$('list').addEventListener('click',e=>{const b=e.target.closest('.row');if(!b)return;detail(+b.dataset.i);if(matchMedia('(max-width:900px)').matches)$('panel').scrollIntoView({behavior:'smooth',block:'start'})});
+
+async function load(){
+  try{const r=await fetch('/api/data',{cache:'no-store'});const j=await r.json();if(j.stats)stats=j.stats;if(j.current){data=j.current}render()}
+  catch(e){if(!data)$('list').innerHTML='<div class="empty">Nem sikerült betölteni az adatokat.</div>'}
+}
+$('refreshBtn').onclick=async()=>{
+  const b=$('refreshBtn'),st=$('refreshSt');b.disabled=true;st.textContent='Kutatás folyamatban… ez 2–4 percig tart, ne zárd be az oldalt.';
+  try{const j=await post('/api/refresh','{}');st.textContent=`Kész: ${j.matches} meccs frissült.`;await load()}
+  catch(e){st.textContent=e.message}
+  finally{b.disabled=false}
+};
+$('slip').hidden=false;
+load();
+}
+</script>
+</body>
+</html>
