@@ -12,6 +12,7 @@ Focimeccs-elemző oldal: statisztika, csapathírek, kulcsjátékosok formája, p
 - `public/app.html` – a felület (érték-kalkulátorral)
 - `public/data/*.json` – a napi adatok
 - `proxy.js` – jelszavas védelem (HTTP Basic Auth)
+- `app/api/ingest` – a napi Claude-feladat ide tölti fel darabolva (gzip+base64url) a friss adatokat; az oldal az `app/api/site-data` végponton olvassa őket (Vercel Blob), és ha üres, a `public/data/*.json` fájlokra esik vissza
 - `lib/apifootball.js`, `app/api/football-data` – API-Football adatgyűjtés
 
 ## Környezeti változók (Vercel)

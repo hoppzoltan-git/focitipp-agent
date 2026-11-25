@@ -280,7 +280,12 @@ function renderSlip(){
 }
 async function getJson(u){const r=await fetch(u+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)return null;return r.json()}
 async function load(){
-  try{const [c,s]=await Promise.all([getJson('/data/current.json'),getJson('/data/stats.json')]);if(s)stats=s;data=c;render();renderSlip()}
+  try{
+    let c=null,s=null;
+    try{const r=await fetch('/api/site-data',{cache:'no-store'});if(r.ok){const j=await r.json();c=j.current;s=j.stats}}catch(e){}
+    if(!c||!s){const [c2,s2]=await Promise.all([getJson('/data/current.json'),getJson('/data/stats.json')]);c=c||c2;s=s||s2}
+    // a frissebbet használjuk
+    if(s)stats=s;data=c;render();renderSlip()}
   catch(e){$('list').innerHTML='<div class="empty">Nem sikerült betölteni az adatokat.</div>'}
 }
 load();
