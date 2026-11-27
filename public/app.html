@@ -133,7 +133,7 @@ footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13p
     <div>
       <h1 id="title">Focitipp Agent</h1>
       <p id="sub">Statisztika, hírek és forma alapján elemzi a következő meccseket, és megmondja, hol látszik érték.</p>
-      <div class="rf"><a class="jump" href="#rec" id="jumpRec" hidden>Ajánlott szelvények ↓</a><span>Minden nap 16:00 körül frissül automatikusan.</span></div>
+      <div class="rf"><a class="jump" href="#rec" id="jumpRec" hidden>Ajánlott szelvények ↓</a><span>Minden nap 12:00 körül frissül automatikusan.</span></div>
     </div>
     <div class="kpis">
       <div class="kpi"><b id="k1">–</b><span>meccs</span></div>
@@ -184,7 +184,7 @@ function stCls(s){s=String(s||'').toLowerCase();return /kies|eltilt|sérült/.te
 function fair(p){return p>0?(100/p).toFixed(2):'–'}
 
 function render(){
-  if(!data||!Array.isArray(data.matches)||!data.matches.length){$('list').innerHTML='<div class="empty">Még nincs betöltött forduló. Az első adatok hamarosan megérkeznek, utána minden nap 16:00 körül frissül.</div>';return}
+  if(!data||!Array.isArray(data.matches)||!data.matches.length){$('list').innerHTML='<div class="empty">Még nincs betöltött forduló. Az első adatok hamarosan megérkeznek, utána minden nap 12:00 körül frissül.</div>';return}
   $('title').textContent=data.title||'Focitipp Agent';
   if(data.subtitle)$('sub').textContent=data.subtitle;
   const ms=data.matches;
