@@ -90,6 +90,14 @@ button:disabled{opacity:.5;cursor:default}
 .src a{color:var(--h);font-size:14px;word-break:break-word}
 .note{font-size:13px;color:var(--mute);margin-top:18px}
 .empty{padding:30px;text-align:center;color:var(--mute)}
+.trk{grid-column:1/-1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,2.5vw,24px)}
+.trk h2{margin:0 0 4px}.trk h3{font-size:15px;margin:18px 0 6px}
+.tk{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}
+.tk div{border:1px solid var(--line);border-radius:12px;padding:10px 12px}.tk b{display:block;font-size:22px}.tk span{font-size:12px;color:var(--mute)}
+.tt{width:100%;border-collapse:collapse;font-size:14px}.tt th,.tt td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}.tt th{font-size:12px;color:var(--mute);font-weight:600}
+.tt td.n{text-align:right;font-variant-numeric:tabular-nums}.tt th.n{text-align:right}
+.ok{color:#1d7a3e;font-weight:700}.bad{color:#b3261e;font-weight:700}.tw{overflow-x:auto}
+.warn{background:#fff6dc;border:1px solid #f0dc9a;border-radius:10px;padding:8px 12px;font-size:13px;margin-top:10px;color:#5c4a00}
 .slip{grid-column:1/-1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,2.5vw,24px)}
 .linkbtn{display:inline-flex;align-items:center;text-decoration:none;background:var(--acc);color:#fff;border-radius:10px;padding:10px 16px;font:600 16px Barlow,sans-serif;min-height:44px}
 .rec{grid-column:1/-1;background:var(--pitch);color:var(--chalk);border-radius:16px;padding:clamp(16px,2.5vw,24px)}
@@ -150,6 +158,11 @@ footer{max-width:1240px;margin:0 auto;padding:0 max(5vw,16px) 40px;font-size:13p
   </section>
   <section class="rec" id="rec" hidden aria-label="Ajánlott szelvények">
     <div id="recList"></div>
+  </section>
+  <section class="trk" id="trk" aria-label="Eddigi teljesítmény">
+    <h2>Eddigi teljesítmény</h2>
+    <p class="ph">Minden tippet utólag ellenőrzünk a valós eredménnyel. A napi frissítés ebből tanul: ahol túl optimista volt, ott óvatosabban becsül.</p>
+    <div id="trkBody"><div class="empty">Az első kiértékelés a következő napi frissítés után jelenik meg.</div></div>
   </section>
   <section class="slip" id="slip" aria-label="Szelvényelemző">
     <div class="slipIn">
@@ -278,11 +291,31 @@ function renderSlip(){
     st.oninput=upd;upd();
   });
 }
+
+const pc=(x)=>x===null||x===undefined?'–':Math.round(x*100)+'%';
+const roiTxt=(x)=>x===null||x===undefined?'–':`<span class="${x>=0?'ok':'bad'}">${x>=0?'+':''}${Math.round(x*100)}%</span>`;
+function trkRow(label,v){return `<tr><td>${esc(label)}</td><td class="n">${v.n}</td><td class="n">${v.won}</td><td class="n"><b>${pc(v.hitRate)}</b></td><td class="n">${pc(v.expected)}</td><td class="n">${roiTxt(v.roi)}</td></tr>`}
+function trkTable(obj,first){const rows=Object.entries(obj||{}).filter(([,v])=>v&&v.n).map(([k,v])=>trkRow(v.label||k,v)).join('');return rows?`<div class="tw"><table class="tt"><thead><tr><th>${first}</th><th class="n">db</th><th class="n">nyert</th><th class="n">találat</th><th class="n">várt</th><th class="n">megtérülés</th></tr></thead><tbody>${rows}</tbody></table></div>`:''}
+function renderTrack(t){
+  const b=$('trkBody');if(!t||!t.overall)return;
+  const o=t.overall;
+  if(!o.n&&!t.matchesSettled){b.innerHTML=`<div class="empty">Még nincs lejátszott, kiértékelhető meccs${t.daysArchived?` (${t.daysArchived} nap tippjei mentve)`:''}. Az első eredmények a meccsek utáni napi frissítéskor jelennek meg.</div>`;return}
+  let h=`<div class="tk"><div><b>${o.n}</b><span>kiértékelt tipp</span></div><div><b>${pc(o.hitRate)}</b><span>nyertes arány</span></div><div><b>${pc(o.expected)}</b><span>várt arány (becslés)</span></div><div><b>${roiTxt(t.slipLegs&&t.slipLegs.roi)}</b><span>szelvénytételek megtérülése (1 egység/tétel)</span></div><div><b>${t.matchesSettled}</b><span>lejátszott meccs az adatbázisban</span></div></div>`;
+  if(t.sampleWarning)h+=`<div class="warn">${esc(t.sampleWarning)}</div>`;
+  const bt=trkTable(t.byType,'Piac');if(bt)h+=`<h3>Piaconként</h3>${bt}`;
+  const bc=trkTable(t.byConf,'Magabiztosság');if(bc)h+=`<h3>Magabiztosság szerint (conf 3 = erős)</h3>${bc}`;
+  const cal=trkTable(t.calibration,'Becsült esély');if(cal)h+=`<h3>Kalibráció – bejön-e annyiszor, amennyire becsültük?</h3>${cal}`;
+  const sl=Object.entries(t.slips||{});if(sl.length)h+=`<h3>Ajánlott szelvények</h3><div class="tw"><table class="tt"><thead><tr><th>Szelvény</th><th class="n">db</th><th class="n">nyert</th><th class="n">megtérülés</th></tr></thead><tbody>${sl.map(([k,v])=>`<tr><td>${esc(k)}</td><td class="n">${v.n}</td><td class="n">${v.won}</td><td class="n">${roiTxt(v.roi)}</td></tr>`).join('')}</tbody></table></div>`;
+  const bias=[];if(t.corners)bias.push(`Szöglet: ${t.corners.n} meccs, átlagos eltérés ${t.corners.mae} – ${t.corners.bias>0?'alábecsültük':'túlbecsültük'} átlagosan ${Math.abs(t.corners.bias)}-del.`);if(t.cards)bias.push(`Lapok: ${t.cards.n} meccs, átlagos eltérés ${t.cards.mae} – ${t.cards.bias>0?'alábecsültük':'túlbecsültük'} átlagosan ${Math.abs(t.cards.bias)}-del.`);
+  if(bias.length)h+=`<h3>Szöglet- és lapbecslések pontossága</h3><p class="ph">${bias.map(esc).join('<br>')}</p>`;
+  if(t.recentBets&&t.recentBets.length)h+=`<h3>Legutóbbi kiértékelt tippek</h3><div class="tw"><table class="tt"><tbody>${t.recentBets.slice(0,12).map(r=>`<tr><td>${esc(r.day)}</td><td>${esc(r.match)}</td><td>${esc(r.pick||'')}</td><td class="n ${r.out==='won'?'ok':r.out==='lost'?'bad':''}">${r.out==='won'?'✓ nyert':r.out==='lost'?'✗ vesztett':'visszajár'}</td></tr>`).join('')}</tbody></table></div>`;
+  b.innerHTML=h;
+}
 async function getJson(u){const r=await fetch(u+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)return null;return r.json()}
 async function load(){
   try{
     let c=null,s=null;
-    try{const r=await fetch('/api/site-data',{cache:'no-store'});if(r.ok){const j=await r.json();c=j.current;s=j.stats}}catch(e){}
+    try{const r=await fetch('/api/site-data',{cache:'no-store'});if(r.ok){const j=await r.json();c=j.current;s=j.stats;try{renderTrack(j.track)}catch(e){}}}catch(e){}
     if(!c||!s){const [c2,s2]=await Promise.all([getJson('/data/current.json'),getJson('/data/stats.json')]);c=c||c2;s=s||s2}
     // a frissebbet használjuk
     if(s)stats=s;data=c;render();renderSlip()}

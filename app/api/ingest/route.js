@@ -1,5 +1,6 @@
 import { gunzipSync } from 'node:zlib';
 import { writeBlob, listPrefix, deletePrefix } from '../../../lib/blobdata';
+import { archiveDay } from '../../../lib/learning';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 30;
@@ -37,7 +38,10 @@ export async function GET(req) {
     if (doc === 'stats' && typeof parsed.byId !== 'object') throw new Error('A stats dokumentumból hiányzik a byId.');
     await writeBlob(`data/${doc}.json`, JSON.stringify(parsed));
     await deletePrefix(prefix).catch(() => {});
-    return Response.json({ ok: true, done: true, doc, bytes: json.length, matches: parsed.matches?.length, published: true });
+    // A current élesítésekor a napi tippeket a tanulási naplóba is elmentjük (a stats már előtte feltöltődött)
+    let archived = null;
+    if (doc === 'current') archived = await archiveDay(parsed).catch((e) => ({ error: e.message }));
+    return Response.json({ ok: true, done: true, doc, bytes: json.length, matches: parsed.matches?.length, published: true, archived });
   } catch (e) {
     return Response.json({ error: e.message }, { status: 500 });
   }
